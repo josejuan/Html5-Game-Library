@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<!--
+ *
+ * -- JJBM, 10/02/2012, h5gl_sprite_schema_generator.htm
+ * --/
+ *-->
+<html>
+<head>
+    <title>Html 5 Game Libray - Sprite Schema Generator</title>
+    <script type="text/javascript" src="h5gl/h5gl.core.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.font.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.sprite.js"></script>
+    <script type="text/javascript">
+
+        function body_onLoad() {
+
+            var g = window.h5gl_editor = new H5GL.Workspace(document.getElementById('playGround'));
+            g.onInit.Attach('myInit', function(s, d) { s.UpdateViewport(500, 500) });
+            g.Init();
+            g.AttachController('sprite.editor', {
+
+                state: 'M',
+                image: (function(){var i = new Image(); i.src = "demos/resources/sprites/walker3.png"; return i})(),
+                font: new H5GL.Font('demos/resources/fonts/andale_monospace.png'),
+
+                image_pos: {x: 0, y: 0},
+                dragging: false,
+                last_mouse_pos: null,
+                mouse_selection: null,
+                d_ref_pos: {x: 0, y: 0},
+
+                sprite_schema: [],
+                cur_sprite: 0,
+
+                onControllerActivation: function(s, d) {
+                    this.image_pos.y = this.formHeight = s.__canvas.height >> 3;
+                    this.d_ref_pos = {x: s.__canvas.width >> 1, y: s.__canvas.height >> 1};
+                },
+
+                onMouseDown: function (s, d) {
+                    this.dragging = true;
+                    this.last_mouse_pos = d;
+                    switch(this.state) {
+                    case 'S':
+                        this.mouse_selection = {start: d, end: null};
+                        break;
+                    }
+                },
+
+                onMouseUp: function(s, d) {
+                    this.dragging = false;
+                    this.last_mouse_pos = d;
+                },
+
+                onMouseMove: function(s, d) {
+                    switch(this.state) {
+                    case 'M':
+                        if(this.dragging) {
+                            this.image_pos.x += d.x - this.last_mouse_pos.x;
+                            this.image_pos.y += d.y - this.last_mouse_pos.y;
+                        }
+                        break;
+                    case 'D':
+                        if(this.dragging) {
+                            this.d_ref_pos.x += d.x - this.last_mouse_pos.x;
+                            this.d_ref_pos.y += d.y - this.last_mouse_pos.y;
+                        }
+                        break;
+                    case 'S':
+                        if(this.dragging && this.mouse_selection != null)
+                            this.mouse_selection.end = d;
+                        break;
+                    }
+                    this.last_mouse_pos = d;
+                },
+
+                onKeyDown: function(s, d) {
+                    switch(d.keyCode) {
+                    /* M */ case 77:
+                        this.state = 'M';
+                        break;
+                    /* S */ case 83:
+                        this.state = 'S';
+                        break;
+                    /* D */ case 68:
+                        this.state = 'D';
+                        break;
+                    /* T */ case 84:
+                        if(this.state != 'T') {
+                            this.state = 'T';
+                            this.test = new H5GL.Sprite(this.image, {
+                                type: 'sequence',
+                                name: 'test',
+                                mode: 0,
+                                cycle_time: 1.0,
+                                transforms: this.sprite_schema
+                            });
+                            this.test.getSequence('test').data = { last_pose: 0, x: 0 };
+                            {
+                                var w = "\
+this.YOUR_SPRITE = new H5GL.Sprite(this.YOUR_IMAGE, {\n\
+    type: 'sequence',\n\
+    name: 'YOUR_SPRITE',\n\
+    mode: 0,\n\
+    cycle_time: 1.0,\n\
+    transforms: [\n\
+";
+                                for(var n = 0, e = this.sprite_schema; n < e.length; n++)
+                                    w += "\
+        {type: 'coords', x: " + e[n].x + ", y: " + e[n].y + ", w: " + e[n].w + ", h: " + e[n].h + ", transforms: [{type: 'define', name: 'YOUR_SPRITE_" + n + "', dx: " + e[n].transforms[0].dx + ", dy: " + e[n].transforms[0].dy + "}]},\n";
+                                w += "\
+    ]\n\
+});\
+";
+                                document.getElementById('sprite_code').value = w;
+                            }
+                        }
+                        break;
+                    /* C */ case 67:
+                        switch(this.state) {
+                        case 'M':
+                            this.image_pos = {x: 0, y: this.formHeight};
+                            break;
+                        case 'S':
+                            if(this.sprite_schema.length > 0) {
+                                var dx = this.sprite_schema[0].transforms[0].dx;
+                                var dy = this.sprite_schema[0].transforms[0].dy;
+                                for(var n = 0; n < this.sprite_schema.length; n++) {
+                                    this.sprite_schema[n].transforms[0].dx -= dx;
+                                    this.sprite_schema[n].transforms[0].dy -= dy;
+                                }
+                            }
+                            break;
+                        }
+                        break;
+                    /* I */ case 73:
+                        switch(this.state) {
+                        case 'S':
+                            if(this.mouse_selection != null && this.mouse_selection.end != null)
+                                this.sprite_schema.push({
+                                    type: 'coords',
+                                    x: Math.min(this.mouse_selection.end.x, this.mouse_selection.start.x) - this.image_pos.x,
+                                    y: Math.min(this.mouse_selection.end.y, this.mouse_selection.start.y) - this.image_pos.y,
+                                    w: Math.abs(this.mouse_selection.end.x - this.mouse_selection.start.x),
+                                    h: Math.abs(this.mouse_selection.end.y - this.mouse_selection.start.y),
+                                    transforms: [{
+                                        type: 'define',
+                                        name: 'sprite' + this.sprite_schema.length,
+                                        dx: 0,
+                                        dy: 0
+                                    }]
+                                });
+                            break;
+                        }
+                        break;
+                    /* Q */ case 81:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite > 0)
+                                this.cur_sprite--;
+                            break;
+                        }
+                        break;
+                    /* W */ case 87:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite < this.sprite_schema.length - 1)
+                                this.cur_sprite++;
+                            break;
+                        }
+                        break;
+                    /* R */ case 82:
+                        switch(this.state) {
+                        case 'D':
+                            this.d_ref = this.last_mouse_pos;
+                            break;
+                        }
+                        break;
+                    /* arrow UP */ case 38:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite < this.sprite_schema.length)
+                                this.sprite_schema[this.cur_sprite].transforms[0].dy--;
+                            break;
+                        }
+                        break;
+                    /* arrow DOWN */ case 40:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite < this.sprite_schema.length)
+                                this.sprite_schema[this.cur_sprite].transforms[0].dy++;
+                            break;
+                        }
+                        break;
+                    /* arrow LEFT */ case 37:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite < this.sprite_schema.length)
+                                this.sprite_schema[this.cur_sprite].transforms[0].dx--;
+                            break;
+                        }
+                        break;
+                    /* arrow RIGHT */ case 39:
+                        switch(this.state) {
+                        case 'D':
+                            if(this.cur_sprite < this.sprite_schema.length)
+                                this.sprite_schema[this.cur_sprite].transforms[0].dx++;
+                            break;
+                        }
+                        break;
+                    default:
+                        console.log("unhandled key up: " + d.keyCode);
+                        break;
+                    }
+                },
+
+                onDraw: function(s, d) {
+
+                    var ct = d.context;
+                    var cw = d.canvas.width;
+                    var ch = d.canvas.height;
+
+                    // draw scene
+                    ct.fillStyle = 'lightgray';
+                    ct.fillRect(0, 0, cw, ch);
+
+                    switch(this.state) {
+                    case 'M':
+                    case 'S':
+                        ct.drawImage(this.image, this.image_pos.x, this.image_pos.y);
+                        break;
+                    case 'D':
+                        if(this.sprite_schema.length > 0) {
+                            ct.save();
+                            ct.globalAlpha = 0.3;
+                            for(var n = 0; n < this.sprite_schema.length; n++) {
+                                var cs = this.sprite_schema[n];
+                                ct.drawImage(
+                                    this.image,
+                                    cs.x, cs.y,
+                                    cs.w, cs.h,
+                                    this.d_ref_pos.x + cs.transforms[0].dx,
+                                    this.d_ref_pos.y + cs.transforms[0].dy,
+                                    cs.w, cs.h
+                                );
+                            }
+                            ct.globalAlpha = 1.0;
+                            var cs = this.sprite_schema[this.cur_sprite];
+                            ct.drawImage(
+                                this.image,
+                                cs.x, cs.y,
+                                cs.w, cs.h,
+                                this.d_ref_pos.x + cs.transforms[0].dx,
+                                this.d_ref_pos.y + cs.transforms[0].dy,
+                                cs.w, cs.h
+                            );
+                            ct.restore();
+                        }
+                        break;
+                    case 'T':
+                        this.test.getSequence('test').Draw(s, d, this.last_mouse_pos.x, this.last_mouse_pos.y);
+                        break;
+                    }
+
+                    // custom trasparent and guides cursor
+                    if(this.last_mouse_pos) {
+                        ct.save();
+                        ct.globalAlpha = 0.3;
+                        ct.strokeStyle = 'black';
+                        ct.beginPath();
+                        ct.moveTo(this.last_mouse_pos.x, 0);
+                        ct.lineTo(this.last_mouse_pos.x, ch);
+                        ct.moveTo(0, this.last_mouse_pos.y);
+                        ct.lineTo(cw, this.last_mouse_pos.y);
+                        ct.stroke();
+                        ct.restore();
+                    }
+
+                    switch(this.state) {
+                    case 'S':
+                        if(this.mouse_selection != null && this.mouse_selection.end != null) {
+                            ct.strokeStyle = 'red';
+                            ct.strokeRect(
+                                this.mouse_selection.start.x,
+                                this.mouse_selection.start.y,
+                                this.mouse_selection.end.x - this.mouse_selection.start.x,
+                                this.mouse_selection.end.y - this.mouse_selection.start.y
+                            );
+                        }
+                        break;
+                    }
+
+                    ct.fillStyle = 'gray';
+                    ct.clearRect(0, 0, cw, this.formHeight);
+
+                    this.font.DrawString(s, d, "mode: " + this.state + ", # sprites: " + this.sprite_schema.length, {maxheight: 14});
+
+                    ct.strokeStyle = 'black';
+                    ct.beginPath();
+                    ct.moveTo(0, this.formHeight);
+                    ct.lineTo(cw, this.formHeight);
+                    ct.stroke();
+
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+</head>
+<body onload="body_onLoad()">
+    <div>
+        <canvas id="playGround" style="cursor: none">
+        </canvas>
+        <ul style="float: right">
+            <li><b>M</b>, change to move mode:
+                <ul>
+                    <li><b>drag &amp; drop</b>, move sprite image into view.</li>
+                    <li><b>C</b>, move sprite image to (0, 0) position.</li>
+                </ul></li>
+            <li><b>S</b>, change to select mode:
+                <ul>
+                    <li><b>drag &amp; drop</b>, create a box selection.</li>
+                    <li><b>I</b>, insert the new sprite if box selection exists.</li>
+                    <li><b>C</b>, center all displacement refs to first sprite.</li>
+                </ul></li>
+            <li><b>D</b>, change to desplacement mode:
+                <ul>
+                    <li><b>Q</b>, previous sprite.</li>
+                    <li><b>W</b>, next sprite.</li>
+                    <li><b>arrow</b>, move one pixel the desplacement reference.</li>
+                    <li><b>drag &amp; drop</b>, move sprite images into view.</li>
+                </ul></li>
+            <li><b>T</b>, test current sprite. You can copy generated code here:<br />
+                <textarea id="sprite_code" style="width: 200px; height: 100px"></textarea>
+                </li>
+        </ul>
+    </div>
+</body>
+</html>
