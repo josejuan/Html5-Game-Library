@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<!--
+ *
+ * -- JJBM, 24/01/2012, Html5GameLibrary.htm
+ * -- JJBM, 25/01/2012, h5gl.simple3dwiredcontroller.js
+ * -- JJBM, 27/01/2012, h5gl.loader.js
+ * -- JJBM, 28/01/2012, h5gl.boxbound.js
+ * -- JJBM, 03/02/2012, h5gl.font.js
+ * -- JJBM, 09/02/2012, h5gl.sprite.js
+ * -- JJBM, 15/02/2012, some design jobs
+ * --/
+ *-->
+<html>
+<head>
+    <title>Html 5 Game Libray</title>
+    <link rel="stylesheet" href="style.css" />
+    <!--
+        You (probably) never need all of these includes.
+    -->
+    <script type="text/javascript" src="h5gl/h5gl.core.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.simple3dwiredcontroller.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.loader.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.boxbound.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.font.js"></script>
+    <script type="text/javascript" src="h5gl/h5gl.sprite.js"></script>
+    <!--
+    <script type="text/javascript" src="h5gl/h5gl.bspline.js"></script>
+    -->
+    <script type="text/javascript" src="external/sylvester.src.js"></script>
+    <script type="text/javascript" src="demos/demo.core.js"></script>
+
+    <!-- demos -->
+    <script type="text/javascript" src="demos/simple.draw.js"></script>
+    <script type="text/javascript" src="demos/simple.timeline.js"></script>
+    <script type="text/javascript" src="demos/simple.keys.js"></script>
+    <script type="text/javascript" src="demos/simple.loader.js"></script>
+    <script type="text/javascript" src="demos/complex.loader.js"></script>
+    <script type="text/javascript" src="demos/simple.water.js"></script>
+    <script type="text/javascript" src="demos/simple.3dforest.js"></script>
+    <script type="text/javascript" src="demos/simple.hlx.js"></script>
+    <script type="text/javascript" src="demos/simple.boxbound.js"></script>
+    <script type="text/javascript" src="demos/simple.boxbound2.js"></script>
+    <script type="text/javascript" src="demos/simple.boxbound3.js"></script>
+    <script type="text/javascript" src="demos/simple.dragdrop.js"></script>
+    <script type="text/javascript" src="demos/simple.buttons.js"></script>
+    <script type="text/javascript" src="demos/simple.fonts.js"></script>
+    <script type="text/javascript" src="demos/star.trek.loader.js"></script>
+    <script type="text/javascript" src="demos/simple.boxcollide.js"></script>
+    <script type="text/javascript" src="demos/simple.boxcollide2.js"></script>
+    <script type="text/javascript" src="demos/simple.boxforces.js"></script>
+    <script type="text/javascript" src="demos/simple.sprite.js"></script>
+    <!--
+    <script type="text/javascript" src="demos/simple.bspline.js"></script>
+    -->
+    <script type="text/javascript">
+
+    	function body_onLoad() {
+
+			var g = new H5GL.Workspace(document.getElementById('playGround'));
+
+			g.onInit.Attach('myInit', function(s, d) {
+                s.UpdateViewport(500, 500);
+            });
+
+			g.onFPS.Attach('myFPS', function(s, d) {
+                document.getElementById('demo' + demos.curDemo + 'fps').innerHTML = Math.round(d);
+            });
+
+			g.onKeyUp.Attach('myKeyUp', function(s, d) {
+                switch(d.keyCode) {
+                case 69: demos.SetNextDemo(g); break;
+                case 81: demos.SetPriorDemo(g); break;
+                default: console.log("myKeyUp: " + d.keyCode); break;
+                }
+            });
+
+			g.Init();
+
+            window.myWorkspace = g;
+            {
+                var l = document.getElementById('demolist');
+                l.innerHTML = demos.GenerateDemoList(l.innerHTML);
+            }
+            demos.SetCurrentDemo(g);
+            window.scroll(0, 0);
+
+    	}
+
+    </script>
+
+
+    <!-- only needed for this html page, H5GL don't use it -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+    <!-- only needed for source code formatting -->
+    <link rel="stylesheet" title="Default" href="external/styles/default.css">
+    <script type="text/javascript" src="external/highlight.pack.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#sourceCodeFooter > span').click(function () {
+                $('#sourceCodeBody').animate({height:'20px'}, 500, '', function () {$('#sourceCode').hide()});
+            });
+            $('#h5gl_code').find('span').filter('[rel^=h5]').css({
+                cursor: 'pointer',
+                color: 'blue',
+                'text-decoration': 'underline'
+            }).click(function () {
+                viewSourceCode($(this).attr('rel'));
+            });
+        });
+        function viewSourceCode(url) {
+            $.get(url, function(code) {
+                $('#sourceCodeText').text('\n' + code);
+                hljs.highlightBlock(document.getElementById('sourceCodeStyle'), null, true);
+                $('#sourceCode').show();
+                $('#sourceCodeBody').animate({height:'400px'}, 500);
+            });
+        }
+    </script>
+
+    <!-- only needed for comments plugin -->
+    <script type="text/javascript" src="external/easycomments/jquery.easy-comment.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+       $("#comments_list").EasyComment({
+          path: "external/easycomments/",
+          hasEmail: true,
+          countPerPage: 20
+       });
+    });
+    </script>
+    <style type="text/css">
+        .ec-comment-form fieldset fieldset input { border: 1px solid #e0e0e0; }
+        .ec-comment-form fieldset fieldset textarea { border: 1px solid #e0e0e0; }
+        .ec-comment-form fieldset div button { cursor: pointer; }
+    </style>
+
+
+</head>
+<body onload="body_onLoad()">
+    <div id="sourceCode">
+        <div id="sourceCodeStyle">
+            <div id="sourceCodeBody" class="javascript">
+                <pre>
+                    <code id="sourceCodeText">
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div id="sourceCodeFooter">
+            <span>close this source code window</span>
+        </div>
+    </div>
+    <div id="allcontent">
+        <div id="header">
+            <div id="contact">
+                <ul>
+                    <li>Yet another HTML5 game libray!</li>
+                    <li>h5gl&nbsp;<img src="img/at.png" alt="" style="vertical-align: bottom"/>computer-mind.com</i>
+                </ul>
+            </div>
+            <span id="title"><b>H</b>thml <b>5</b> <b>G</b>ame <b>L</b>ibrary</span>
+            <br />
+            <ul id="menulinks">
+                <li><a href="#demos_section">demos</a></li>
+                <li><a href="#whythis_section">why?</a></li>
+                <li><a href="#compatibility_section">what browsers?</a></li>
+                <li><a href="#thanks_section">thanks to</a></li>
+                <li><a href="#license_section">license <b>GPL3</b></a></li>
+                <li><a href="#download_section">download</a></li>
+                <li><a href="#coming_soon_section">coming soon</a></li>
+                <li><a href="#comments_section">comments</a></li>
+            </ul>
+            <br />
+        </div>
+        <hr />
+        <div id="content">
+            <h2 id="demos_section">~/demos/</h2>
+            <p class="sectiontext"><i>Can you press <b>Q</b> and <b>E</b> keys to activate previous and next demos.</i></p>
+            <div id="demolist">
+                <div id="demo{0}layout">
+                    <br />
+                    <div id="demo{0}info" class="demolistbutton">
+                        <imgtag src="{4}" alt="{1}" />
+                        <br />
+                        <input type="button" value="view demo" onclick="demos.SetDemo(window.myWorkspace, {0})" />
+                        <br />
+                        <input type="button" value="source code" onclick="viewSourceCode('{3}')" />
+                        <br />
+                        <span id="demo{0}fps">?</span> fps
+                    </div>
+                    <h1>&lt;&lt;&nbsp;<span id="demolisttitle">{1}</span></h1>
+                    <p class="demolistdescription">{2}</p>
+                    <hr style="clear: both" />
+                </div>
+            </div>
+            <canvas id="playGround">
+            </canvas>
+            <hr />
+            <br />
+            <h2 id="compatibility_section">~/what browsers?/</h2>
+            <p class="sectiontext">I dev on <b>Firefox</b> and check speed and resources on <b>Chromium</b>. At this time, I don't check and debug bugs for browsers compatibility (neither the speed performance). I use <b>W3C</b> standar reference.</p>
+            <p class="sectiontext">Anyway, here's a shallow performance test:<br />
+            <ul class="mylist">
+                <li><b>»</b>&nbsp;Over <b>Windows Vista</b>:
+                    <ul class="mylist">
+                        <li><b>»</b>&nbsp;<b>Firefox</b> <i>(9.0.1 desktop)</i>, run <span style="color: green">100% correct</span> and reasonable speed.</li>
+                        <li><b>»</b>&nbsp;<b>Chrome</b> <i>(16.0.912.77 desktop)</i>, run <span style="color: green">100% correct</span> and very fast!.</li>
+                        <li><b>»</b>&nbsp;<b>Opera</b> <i>(11.61 desktop)</i>, run <span style="color: green">100% correct</span> but very slow!.</li>
+                        <li><b>»</b>&nbsp;<b>IE9</b> <i>(9.0.8112.16421 desktop)</i>, run with <span style="color: red">fails</span> (kayboard events) and slow.</li>
+                    </ul>
+                </li>
+                <li><b>»</b>&nbsp;Over <b>Arch Linux</b>:
+                    <ul class="mylist">
+                        <li><b>»</b>&nbsp;<b>Firefox</b> <i>(9.0.1 desktop)</i>, run <span style="color: green">100% correct</span> and normal speed (better than firefox over windows).</li>
+                        <li><b>»</b>&nbsp;<b>Chromium</b> <i>(16.0.912.77 desktop)</i>, run <span style="color: green">100% correct</span> and <span style="color: green; font-weight: bold; font-style: italic">EPIC FAST!</span>.</li>
+                        <li><b>»</b>&nbsp;<b>Opera</b> <i>(11.61 desktop)</i>, run <span style="color: green">100% correct</span> but slow!.</li>
+                    </ul>
+                </li>
+            </ul>
+            </p>
+            <hr />
+            <br />
+            <h2 id="thanks_section">~/thanks to/</h2>
+            <ul id="thanks" class="mylist">
+                <li><b>»</b>&nbsp;<a href="http://jquery.com">jQuery</a>, I love <b>jQuery</b> (although H5GL don't use it).</li>
+                <li><b>»</b>&nbsp;<a href="http://softwaremaniacs.org/soft/highlight/en/">Highlight.js</a>, I use her <b>Highlight.js</b> module to highlight source code.</li>
+                <li><b>»</b>&nbsp;<a href="http://blog.jcoglan.com/">James Coglan</a>, I use her <a href="http://sylvester.jcoglan.com">Sylvester</a> API for 3D matrix transformations.</li>
+                <li><b>»</b>&nbsp;<a href="http://daleharvey.org/">Dale Harvey</a>, I tried to draw inspiration from her sleek design (but you can see my result...).</li>
+                <li><b>»</b>&nbsp;<a href="http://www.jswidget.com/lab/easy-comment.html/">Easy Comment</a>, I'm using her comments blog plugin, it's simple!.</li>
+            </ul>
+            <hr />
+            <br />
+            <h2 id="whythis_section">~/why?/</h2>
+            <p class="sectiontext">Because it's fun!<br />
+            </p>
+            <hr />
+            <br />
+            <h2 id="license_section">~/license GPL3/</h2>
+            <p class="sectiontext">I made this only for fun (although, if you like give me a gift, I'm not stupid... XD).<br />
+            You can use it (if you see utility) always you share your results to community.<br />
+            Yes, the <a href="LICENSE.txt">GPL v3</a> license.
+            </p>
+            <hr />
+            <br />
+            <h2 id="download_section">~/download/</h2>
+            <p class="sectiontext">
+                All javascript source code are not minified (you can read comments and my <b>frightful code</b> XD).<br /><br />
+                To see demos source code you can click on each <i>"source code"</i> demo button.<br /><br />
+                To see <b>H5GL</b> source code you can click on:<br /><br />
+                <ul id="h5gl_code" class="mylist">
+                    <li><b>»</b>&nbsp;<b>H5GL.Core</b>, (<span rel="h5gl/h5gl.core.js">source code</span>), the engine core.</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.BoxBound</b>, (<span rel="h5gl/h5gl.boxbound.js">source code</span>), manage boxes: bounds, mouse events, drag and drop, simply physics, ...</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.Font</b>, (<span rel="h5gl/h5gl.font.js">source code</span>), manage bitmaps fonts like <b>GLUT</b>.</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.Loader</b>, (<span rel="h5gl/h5gl.loader.js">source code</span>), manage images loading progress.</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.Simple3DWiredController</b>, (<span rel="h5gl/h5gl.simple3dwiredcontroller.js">source code</span>), a controller with 3D transformation and projection like (but much more simply) <b>OpenGL</b>.</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.Sprite</b>, (<span rel="h5gl/h5gl.sprite.js">source code</span>), manage sprite images: multiple subsprites on single image, sequences, ...</li>
+                    <li><b>»</b>&nbsp;<b>H5GL.BSpline</b>, (<span rel="h5gl/h5gl.bspline.js">source code</span>), coming soon...</li>
+                </ul>
+            </p>
+            <hr />
+            <br />
+            <h2 id="coming_soon_section">~/coming soon/</h2>
+            <p class="sectiontext">
+                <ul class="mylist">
+                    <li><b>2012 february 15 »</b>&nbsp;I don't know when I will invest time in H5GL. Probably I will add <b>b-spline</b> support... soon.</li>
+                </ul>
+            </p>
+            <hr />
+            <br />
+            <h2 id="comments_section">~/comments/</h2>
+            <div id="comments_list">
+            </div>
+        </div>
+    </div>
+    <div style="height: 1000px">
+    </div>
+</body>
+</html>

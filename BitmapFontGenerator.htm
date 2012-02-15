@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bitmap Font Generator</title>
+    <style type="text/css">
+    body {
+    	background-color: black;
+    }
+    table {
+    	border: 0;
+    	padding: 0;
+    	margin: 0;
+    	background-color: white;
+    	border-collapse: collapse;
+        /* font-family: Andale Mono, monospace; */
+        font-family: DigifaceWide;
+    	font-size: 30px;
+    	font-weight: bold;
+        color: yellow;
+    }
+    td {
+    	border: 0;
+    	text-align: center;
+    }
+    </style>
+    <script type="text/javascript">
+
+    	function CheckWidth() {
+    		var tr = new Array();
+    		var td = new Array();
+    		for(var i = 0, A = document.getElementById('T').children[0].children, L = A.length; i < L; i++) {
+    			tr.push(A[i]);
+	    		for(var j = 0, B = A[i].children, M = B.length; j < M; j++)
+	    			td.push(B[j]);
+	    	}
+	    	var maxw = 0, maxh = 0;
+	    	for(var i = 0, L = td.length; i < L; i++) {
+	    		if(maxw < td[i].offsetWidth)
+	    			maxw = td[i].offsetWidth;
+	    		if(maxh < td[i].offsetHeight)
+	    			maxh = td[i].offsetHeight;
+	    	}
+	    	for(var i = 0, L = tr.length; i < L; i++)
+	    		tr[i].style.height = maxh + 'px';
+	    	for(var i = 0, L = td.length; i < L; i++)
+	    		td[i].style.width = maxw + 'px';
+    	}
+    	function body_onLoad() {
+    		var t = "";
+    		var cc = 0;
+    		for(var f = 0; f < 17; f++) {
+    			t += "<tr>";
+	    		for(var c = 0; c < 16; c++, cc++) {
+	    			var cck = "&#" + cc + ";";
+	    			if(cc < 32 || cc == 172 || cc == 137)
+	    				cck = "&nbsp;";
+	    			t += "<td title='" + cc + "'>" + cck + "</td>";
+	    		}
+    			t += "</tr>";
+    		}
+    		document.getElementById('T').innerHTML = t;
+    		setTimeout(CheckWidth, 10);
+    	}
+
+	</script>
+</head>
+<body onload="body_onLoad()">
+	<div>
+		<table id="T">
+		</table>
+	</div>
+</body>
+</html>

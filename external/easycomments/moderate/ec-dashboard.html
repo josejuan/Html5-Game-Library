@@ -1,0 +1,246 @@
+﻿<html>
+	<head>
+	   <meta http-equiv="X-UA-Compatible" content="IE=9" />
+	   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>EasyComment Dashboard</title>
+      <meta name="description" 
+            content="Allowing visitors to leave comment on your web page using EasyComment jQuery Plugin" />
+      <meta name="keywords" content="online painting program, canvas paint, html5, css3, ms paint, ms paint like program, photoshop alternative
+                  canvas, online image editor, online photo editor, photoshop algorithms" />
+      <meta name="author" content="Yubo Dong" />
+      <style>
+      .caption,
+      .filter,.note{
+         margin: 0 auto;
+         width: 1000px;
+         position:relative;
+         font:24px Georgia;
+         padding:10px;
+         margin-bottom:10px;
+         text-align:center;
+      }
+      .filter{text-align:right;font:13px Georgia;}
+      .note{font:italic 12px Georgia;}
+      .page_section{
+         margin: 0 auto;
+         width: 1000px;
+         position:relative;
+         font:13px Georgia;
+         padding:10px;
+         margin-bottom:10px;
+         border:1px solid black;
+
+         background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#ffffff), to(#e2e4e3));
+         background-image: -moz-linear-gradient(#ffffff, #e2e4e3);
+         background-image: linear-gradient(#ffffff, #e2e4e3);
+         filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#ffffff,endColorstr=#e2e4e3);
+      }
+      .page_section .url{
+         position:relative;
+         font-size:1.4em;
+         font-weight:bold;
+         height:24px;
+         line-height:24px;
+      }
+      .page_section .title{
+         position:relative;
+         font-size:0.9em;
+         height:24px;
+         line-height:24px;
+      }
+      .page_section .comments{
+         position:relative;
+      }         
+      .page_section .comments .domid{
+         position:relative;
+         font-size:0.9em;
+         height:24px;
+         line-height:24px;
+      }         
+      .page_section .comments .comment_list{
+         position:relative;
+      }         
+      .page_section .comments .comment_list table{border-left:1px solid #cccccc;border-top:1px solid #cccccc;}
+      .page_section .comments .comment_list table td,
+      .page_section .comments .comment_list table th{
+         font:12px arial;
+         border-right:1px solid #cccccc;border-bottom:1px solid #cccccc;
+      }
+      .page_section .comments .comment_list table th{
+         font-weight:bold;
+         background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#ffffff), to(#e2e4e3));
+         background-image: -moz-linear-gradient(#ffffff, #e2e4e3);
+         background-image: linear-gradient(#ffffff, #e2e4e3);
+         filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#ffffff,endColorstr=#e2e4e3);
+      }
+      .page_section .comments .comment_list table td button{font:bold 11px arial;}
+      </style>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+      <script type="text/javascript">
+
+      jQuery(document).ready(function(){
+         $("#filter_option").val("1").change(function(){
+            loadPages($(this).val());
+         });
+         loadPages("1");
+         
+      });
+      function loadPages(filter){
+         var data = {
+            action    : "getpages"
+         };
+         var _this = this;
+         $.ajax({
+            url:"ec-moderator.php",
+            data:data,
+            dataType:"json",
+            type:"POST",
+            cache:false,
+            success:function(data){
+               displayPages(data,filter);
+            },
+            error:function(s){
+            }
+         });
+      }
+      function displayPages(pages,filter){   
+         $(".page_section").remove();
+         for ( var i = 0; i < pages.length; i ++ ){
+            var $comments = null,$comment_list = null;
+            $("body").append(
+               $("<div></div>").addClass("page_section")
+                  .append($("<div></div>").addClass("url").html(pages[i].url))
+                  .append($("<div></div>").addClass("title").html(pages[i].title))
+                  .append($comments = $("<div></div>").addClass("comments"))
+            );
+            for ( var j = 0; j < pages[i].section.length; j ++ ){
+               $comments
+                  .append(
+                     $("<div></div>").addClass("domid").html(pages[i].section[j])
+                  )
+                  .append(
+                     $comment_list = $("<div></div>").addClass("comment_list")
+                  );
+               loadComments($comment_list,pages[i].file,pages[i].section[j],filter);
+            }
+         }
+      }
+      
+      function loadComments($comment_list,page,domid,type){
+         var data = {
+            action : "comment",
+            page   : page,
+            domid  : domid,
+            type   : type
+         };
+         var _this = this;
+         $.ajax({
+            url:"ec-moderator.php",
+            data:data,
+            dataType:"json",
+            type:"POST",
+            cache:false,
+            success:function(data){
+               displayComments(page,$comment_list,data,type);
+            },
+            error:function(s){
+            }
+         });
+      }
+      function displayComments(page,$comment_list,data,type){
+         if ( data.length > 0 ){
+            var sStatus = "";
+            switch(type){
+            case "0":
+            case "4": sStatus = "Approved";break;
+            case "1": sStatus = "Waiting for approval";break;
+            case "2": sStatus = "Trash";break;
+            case "3": sStatus = "Spam";break;
+            }
+            var $table = null;
+            $comment_list.append(
+               $table = $("<table></table>").attr("cellSpacing",0).attr("cellPadding",5).attr("width","100%").css("background-color","white")
+                  .append(
+                     $("<tr></tr>")
+                        .append($("<th></th>").html("Author"))
+                        .append($("<th></th>").html("Subject"))
+                        .append($("<th></th>").html("Comment"))
+                        .append($("<th></th>").html("Email"))
+                        .append($("<th></th>").html("Web Site"))
+                        .append($("<th></th>").html("IP"))
+                        .append($("<th></th>").html("Date"))
+                        .append($("<th></th>").html("Status/Action"))
+                  )
+            );
+            for ( var i = 0; i < data.length; i ++ ){
+               $table.append(
+                     $("<tr></tr>").attr("id","tr_" + data[i].id)
+                        .append($("<td></td>").html(isEmpty(data[i].author,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].subject,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].msg,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].email,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].site,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].ip,"---")))
+                        .append($("<td></td>").html(isEmpty(data[i].time,"---")))
+                        .append(
+                           $("<td></td>").html(sStatus + "</br></br>").attr("align","center").css("background-color","#EEEEEE")
+                              .append(
+                                 $("<button>Approve</button>").data("data",{page:page,comment:data[i].id,action:"ok"})
+                                    .click(function(){doAction($(this).data("data"));})
+                              )                                    
+                              .append(
+                                 $("<button>Trash</button>").data("data",{page:page,comment:data[i].id,action:"trash"})
+                                    .click(function(){doAction($(this).data("data"));})
+                              )                                    
+                              .append(
+                                 $("<button>Spam</button>").data("data",{page:page,comment:data[i].id,action:"spam"})
+                                    .click(function(){doAction($(this).data("data"));})
+                              )                                    
+                        )
+               )
+            }
+         }
+      }
+      function doAction(data){
+         $.ajax({
+            url:"ec-moderator.php",
+            data:data,
+            dataType:"json",
+            type:"POST",
+            cache:false,
+            success:function(obj){
+               if ( obj.status == 0 ){
+                  $("#tr_" + data.comment).remove();
+               }
+            },
+            error:function(s){
+            }
+         });
+      }
+      function isEmpty(v1,v2){
+         if ( $.trim(v1) === "" ){
+            return v2;
+         }
+         return v1;
+      }
+      </script>
+   </head>
+	<body>
+      <div class="caption">EasyComment Dashboard <span style="font-size:0.7em">1.0</span></div>
+      <div class="note">
+         <strong>Important:</strong>
+         This dashboard is only a prototype for you. You should secure this page by all means so that only you or 
+         granted users have permission to view this page. If you need help on this issue or for more information, 
+         please send email to support@jswidget.com page. 
+      </div>
+      <div class="filter">
+         <label>Filter:</label>
+         <select id="filter_option">
+            <option value="1" selected>Wating for approval</option>
+            <option value="2">Trash</option>
+            <option value="3">Spam</option>
+            <option value="4">Approved</option>
+         </select>
+      </div>
+	</body>
+</html>

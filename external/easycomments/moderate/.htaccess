@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Acceso a \"Moderate\""
+AuthUserFile "/home/s080de29/.htpasswds/public_html/josejuan_/passwd"
+require valid-user
