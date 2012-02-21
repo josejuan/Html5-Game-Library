@@ -1,0 +1,46 @@
+﻿
+Html5 Game Library
+-------------------------------------
+
+File description:
+
+    ~/FILES.txt, you are reading that!
+
+    ~/LICENSE.txt, GPL v3 license
+
+    ~/h5gl, H5GL source code, you only need this files to get H5GL power!  :P
+
+    ~/Html5GameLibrary.htm, H5GL main page
+
+    ~/style.css, style sheet for Html5GameLibrary.htm page
+
+    ~/demos, demonstration code
+
+    ~/external, external libraries only used on H5GL page and demos
+
+    ~/img, images used on H5GL page
+
+    ~/BitmapFontGenerator.htm, tool to generate fonts based on bitmaps
+
+    ~/h5gl_sprite_schema_generator.htm, tool to generate sprite load schemas
+
+Colateral files:
+
+    (you can delete it safely)
+
+    I work either with Windows and Linux. On Windows, I use "Git Extensions" inside Visual Studio
+
+    ~/obj, VS runtime project files
+
+    ~/Html5GameLibrary.csproj, VS project file
+
+    ~/Html5GameLibrary.sln, VS solution file
+
+    ~/Html5GameLibrary.suo, VS user options file
+
+    ~/Web.Debug.config, .NET app configuration file (Debug version)
+
+    ~/Web.Release.config, .NET app configuration file (Release version)
+
+    ~/Web.config, .NET app configuration file (base version)
+

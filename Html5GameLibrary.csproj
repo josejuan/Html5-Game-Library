@@ -257,6 +257,7 @@
     <Content Include="external\styles\vs.css" />
     <Content Include="external\styles\zenburn.css" />
     <Content Include="external\sylvester.src.js" />
+    <Content Include="FILES.txt" />
     <Content Include="h5gl\h5gl.boxbound.js" />
     <Content Include="h5gl\h5gl.bspline.js" />
     <Content Include="h5gl\h5gl.core.js" />
