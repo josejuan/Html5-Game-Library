@@ -231,3 +231,35 @@ h1, h2, h3, h3, h5
     text-decoration: underline;
     color: blue;
 }
+
+#githubbox
+{
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 9998;
+    background-color: #a0a0f0;
+    border: 1px solid gray;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px black;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#githubbox img
+{
+    box-shadow: 4px 4px 8px black;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+#githubbox img:hover
+{
+    border: 1px solid yellow;
+    border-radius: 8px;
+    box-shadow: 1px 1px 2px gray;
+    margin-bottom: 2px;
+}

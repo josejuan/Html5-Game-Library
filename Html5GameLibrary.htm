@@ -23,14 +23,13 @@
     <script type="text/javascript" src="h5gl/h5gl.boxbound.js"></script>
     <script type="text/javascript" src="h5gl/h5gl.font.js"></script>
     <script type="text/javascript" src="h5gl/h5gl.sprite.js"></script>
-    <!--
     <script type="text/javascript" src="h5gl/h5gl.bspline.js"></script>
-    -->
     <script type="text/javascript" src="external/sylvester.src.js"></script>
     <script type="text/javascript" src="demos/demo.core.js"></script>
 
     <!-- demos -->
     <script type="text/javascript" src="demos/simple.draw.js"></script>
+    <!--
     <script type="text/javascript" src="demos/simple.timeline.js"></script>
     <script type="text/javascript" src="demos/simple.keys.js"></script>
     <script type="text/javascript" src="demos/simple.loader.js"></script>
@@ -49,9 +48,8 @@
     <script type="text/javascript" src="demos/simple.boxcollide2.js"></script>
     <script type="text/javascript" src="demos/simple.boxforces.js"></script>
     <script type="text/javascript" src="demos/simple.sprite.js"></script>
-    <!--
-    <script type="text/javascript" src="demos/simple.bspline.js"></script>
     -->
+    <script type="text/javascript" src="demos/simple.bspline.js"></script>
     <script type="text/javascript">
 
     	function body_onLoad() {
@@ -67,11 +65,12 @@
             });
 
 			g.onKeyUp.Attach('myKeyUp', function(s, d) {
-                switch(d.keyCode) {
-                case 69: demos.SetNextDemo(g); break;
-                case 81: demos.SetPriorDemo(g); break;
-                default: console.log("myKeyUp: " + d.keyCode); break;
-                }
+                if($(document).scrollTop() < 750)
+                    switch(d.keyCode) {
+                    case 69: demos.SetNextDemo(g); break;
+                    case 81: demos.SetPriorDemo(g); break;
+                    default: console.log("myKeyUp: " + d.keyCode); break;
+                    }
             });
 
 			g.Init();
@@ -272,6 +271,12 @@
             <div id="comments_list">
             </div>
         </div>
+    </div>
+    <div id="githubbox">
+        Github repository<br />
+        <a href="https://github.com/josejuan/Html5-Game-Library" target="_blank">
+            <img src="img/github.png" alt="" />
+        </a>
     </div>
     <div style="height: 1000px">
     </div>

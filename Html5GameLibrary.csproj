@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2EAC55F6-807A-4426-A356-956BFF50B002}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Html5GameLibrary</RootNamespace>
+    <AssemblyName>Html5GameLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BitmapFontGenerator.htm" />
+    <Content Include="demos\complex.loader.js" />
+    <Content Include="demos\complex.loader.png" />
+    <Content Include="demos\resources\3d\mguard_w1_1.bmp" />
+    <Content Include="demos\resources\3d\mguard_w2_1.bmp" />
+    <Content Include="demos\resources\3d\mguard_w3_1.bmp" />
+    <Content Include="demos\resources\3d\mguard_w4_1.bmp" />
+    <Content Include="demos\resources\button1_a.png" />
+    <Content Include="demos\resources\button1_b.png" />
+    <Content Include="demos\resources\button1_c.png" />
+    <Content Include="demos\resources\dino\bird.gif" />
+    <Content Include="demos\resources\dino\bird2.gif" />
+    <Content Include="demos\resources\dino\coco.gif" />
+    <Content Include="demos\resources\dino\dactilo.gif" />
+    <Content Include="demos\resources\dino\dactilo_2.gif" />
+    <Content Include="demos\resources\dino\dactilo_3.gif" />
+    <Content Include="demos\resources\dino\dactilo_4.gif" />
+    <Content Include="demos\resources\dino\dino.gif" />
+    <Content Include="demos\resources\dino\dino_2.gif" />
+    <Content Include="demos\resources\dino\dino_3.gif" />
+    <Content Include="demos\resources\dino\dino_4.gif" />
+    <Content Include="demos\resources\dino\dino_5.gif" />
+    <Content Include="demos\resources\dino\dino_6.gif" />
+    <Content Include="demos\resources\dino\grass1.gif" />
+    <Content Include="demos\resources\dino\grass2.gif" />
+    <Content Include="demos\resources\dino\grass3.png" />
+    <Content Include="demos\resources\dino\grass4.png" />
+    <Content Include="demos\resources\dino\grass5.png" />
+    <Content Include="demos\resources\dino\raptor.gif" />
+    <Content Include="demos\resources\dino\sky1.png" />
+    <Content Include="demos\resources\dino\sky2.jpg" />
+    <Content Include="demos\resources\dino\sky3.jpg" />
+    <Content Include="demos\resources\dino\sky4.jpg" />
+    <Content Include="demos\resources\dino\sky5.jpg" />
+    <Content Include="demos\resources\dino\sky6.jpeg" />
+    <Content Include="demos\resources\dino\sky7.jpg" />
+    <Content Include="demos\resources\dino\sky8.jpg" />
+    <Content Include="demos\resources\dino\th_Dinosaur.gif" />
+    <Content Include="demos\resources\dino\th_rexus.gif" />
+    <Content Include="demos\resources\dino\th_rexus_2.gif" />
+    <Content Include="demos\resources\dino\th_rexus_3.gif" />
+    <Content Include="demos\resources\dino\th_rexus_4.gif" />
+    <Content Include="demos\resources\dino\th_rexus_5.gif" />
+    <Content Include="demos\resources\dino\th_rexus_and_human.gif" />
+    <Content Include="demos\resources\dino\tree1.png" />
+    <Content Include="demos\resources\dino\tree2.png" />
+    <Content Include="demos\resources\dino\tree3.png" />
+    <Content Include="demos\resources\dino\tree4.png" />
+    <Content Include="demos\resources\dino\tree5.png" />
+    <Content Include="demos\resources\dino\tri.gif" />
+    <Content Include="demos\resources\dino\tri_2.gif" />
+    <Content Include="demos\resources\fonts\andale_monospace.png" />
+    <Content Include="demos\resources\fonts\times_roman.png" />
+    <Content Include="demos\resources\no.png" />
+    <Content Include="demos\resources\no_off.png" />
+    <Content Include="demos\resources\sprites\princesprites.gif" />
+    <Content Include="demos\resources\sprites\walker1.png" />
+    <Content Include="demos\resources\sprites\walker2.png" />
+    <Content Include="demos\resources\sprites\walker3.png" />
+    <Content Include="demos\resources\strek\digifont.png" />
+    <Content Include="demos\resources\strek\loader1.png" />
+    <Content Include="demos\resources\strek\loader2.png" />
+    <Content Include="demos\resources\strek\loader3.png" />
+    <Content Include="demos\resources\strek\loader4.png" />
+    <Content Include="demos\resources\tree1.png" />
+    <Content Include="demos\resources\tux\tux01.png" />
+    <Content Include="demos\resources\tux\tux02.png" />
+    <Content Include="demos\resources\tux\tux03.png" />
+    <Content Include="demos\resources\tux\tux04.png" />
+    <Content Include="demos\resources\tux\tux05.png" />
+    <Content Include="demos\resources\tux\tux06.png" />
+    <Content Include="demos\resources\tux\tux07.png" />
+    <Content Include="demos\resources\tux\tux08.png" />
+    <Content Include="demos\resources\tux\tux09.png" />
+    <Content Include="demos\resources\tux\tux10.png" />
+    <Content Include="demos\resources\tux\tux11.png" />
+    <Content Include="demos\resources\tux\tux12.png" />
+    <Content Include="demos\resources\tux\tux13.png" />
+    <Content Include="demos\resources\tux\tux14.png" />
+    <Content Include="demos\resources\tux\tux15.png" />
+    <Content Include="demos\resources\tux\tux16.png" />
+    <Content Include="demos\resources\tux\tux17.png" />
+    <Content Include="demos\resources\tux\tux18.png" />
+    <Content Include="demos\resources\tux\tux19.png" />
+    <Content Include="demos\resources\tux\tux20.png" />
+    <Content Include="demos\resources\tux\tux21.png" />
+    <Content Include="demos\resources\tux\tux22.png" />
+    <Content Include="demos\resources\tux\tux23.png" />
+    <Content Include="demos\resources\tux\tux24.png" />
+    <Content Include="demos\resources\tux\tux25.png" />
+    <Content Include="demos\resources\tux\tux26.png" />
+    <Content Include="demos\resources\tux\tux27.png" />
+    <Content Include="demos\resources\tux\tux28.png" />
+    <Content Include="demos\resources\tux\tux29.png" />
+    <Content Include="demos\resources\tux\tux30.png" />
+    <Content Include="demos\resources\tux\tux31.png" />
+    <Content Include="demos\resources\tux\tux32.png" />
+    <Content Include="demos\resources\tux\tux33.png" />
+    <Content Include="demos\resources\tux\tux34.png" />
+    <Content Include="demos\resources\tux\tux35.png" />
+    <Content Include="demos\resources\tux\tux36.png" />
+    <Content Include="demos\resources\tux\tux37.png" />
+    <Content Include="demos\resources\tux\tux38.png" />
+    <Content Include="demos\resources\tux\tux39.png" />
+    <Content Include="demos\resources\tux\tux40.png" />
+    <Content Include="demos\resources\tux\tux41.png" />
+    <Content Include="demos\resources\tux\tux42.png" />
+    <Content Include="demos\resources\tux\tux43.png" />
+    <Content Include="demos\resources\tux\tux44.png" />
+    <Content Include="demos\resources\tux\tux45.png" />
+    <Content Include="demos\resources\tux\tux46.png" />
+    <Content Include="demos\resources\tux\tux47.png" />
+    <Content Include="demos\resources\tux\tux48.png" />
+    <Content Include="demos\resources\tux\tux49.png" />
+    <Content Include="demos\resources\tux\tux50.png" />
+    <Content Include="demos\resources\tux\tux51.png" />
+    <Content Include="demos\resources\tux\tux52.png" />
+    <Content Include="demos\resources\tux\tux53.png" />
+    <Content Include="demos\resources\tux\tux54.png" />
+    <Content Include="demos\resources\tux\tux55.png" />
+    <Content Include="demos\resources\tux\tux56.png" />
+    <Content Include="demos\resources\tux\tux57.png" />
+    <Content Include="demos\resources\tux\tux58.png" />
+    <Content Include="demos\resources\tux\tux59.png" />
+    <Content Include="demos\resources\tux\tux60.png" />
+    <Content Include="demos\resources\tux\tux61.png" />
+    <Content Include="demos\resources\tux\tux62.png" />
+    <Content Include="demos\resources\tux\tux63.png" />
+    <Content Include="demos\resources\tux\tux64.png" />
+    <Content Include="demos\resources\tux\tux65.png" />
+    <Content Include="demos\resources\tux\tux66.png" />
+    <Content Include="demos\resources\tux\tux67.png" />
+    <Content Include="demos\resources\tux\tux68.png" />
+    <Content Include="demos\resources\tux\tux69.png" />
+    <Content Include="demos\resources\tux\tux70.png" />
+    <Content Include="demos\resources\tux\tux71.png" />
+    <Content Include="demos\resources\yes.png" />
+    <Content Include="demos\resources\yes_off.png" />
+    <Content Include="demos\simple.3dforest.js" />
+    <Content Include="demos\simple.3dforest.png" />
+    <Content Include="demos\simple.boxbound.js" />
+    <Content Include="demos\simple.boxbound.png" />
+    <Content Include="demos\simple.boxbound2.js" />
+    <Content Include="demos\simple.boxbound2.png" />
+    <Content Include="demos\simple.boxbound3.js" />
+    <Content Include="demos\simple.boxbound3.png" />
+    <Content Include="demos\simple.boxcollide.js" />
+    <Content Include="demos\simple.boxcollide.png" />
+    <Content Include="demos\simple.boxcollide2.js" />
+    <Content Include="demos\simple.boxcollide2.png" />
+    <Content Include="demos\simple.boxforces.js" />
+    <Content Include="demos\simple.boxforces.png" />
+    <Content Include="demos\simple.bspline.js" />
+    <Content Include="demos\simple.buttons.js" />
+    <Content Include="demos\simple.buttons.png" />
+    <Content Include="demos\simple.dragdrop.js" />
+    <Content Include="demos\simple.dragdrop.png" />
+    <Content Include="demos\simple.fonts.js" />
+    <Content Include="demos\simple.fonts.png" />
+    <Content Include="demos\simple.hlx.js" />
+    <Content Include="demos\simple.hlx.png" />
+    <Content Include="demos\simple.keys.js" />
+    <Content Include="demos\simple.keys.png" />
+    <Content Include="demos\demo.core.js" />
+    <Content Include="demos\resources\airplain.png" />
+    <Content Include="demos\resources\key_a.png" />
+    <Content Include="demos\resources\key_awsd.png" />
+    <Content Include="demos\resources\key_d.png" />
+    <Content Include="demos\resources\key_s.png" />
+    <Content Include="demos\resources\key_w.png" />
+    <Content Include="demos\simple.draw.js" />
+    <Content Include="demos\simple.draw.png" />
+    <Content Include="demos\simple.loader.js" />
+    <Content Include="demos\simple.loader.png" />
+    <Content Include="demos\simple.sprite.js" />
+    <Content Include="demos\simple.sprite.png" />
+    <Content Include="demos\simple.timeline.js" />
+    <Content Include="demos\simple.timeline.png" />
+    <Content Include="demos\simple.water.js" />
+    <Content Include="demos\simple.water.png" />
+    <Content Include="demos\star.trek.loader.js" />
+    <Content Include="demos\star.trek.loader.png" />
+    <Content Include="external\easycomments\ec-close_box.png" />
+    <Content Include="external\easycomments\ec-comment.png" />
+    <Content Include="external\easycomments\jquery.easy-comment.js" />
+    <Content Include="external\easycomments\license.txt" />
+    <Content Include="external\easycomments\moderate\ec-dashboard.html" />
+    <Content Include="external\highlight.pack.js" />
+    <Content Include="external\styles\arta.css" />
+    <Content Include="external\styles\ascetic.css" />
+    <Content Include="external\styles\brown_paper.css" />
+    <Content Include="external\styles\brown_papersq.png" />
+    <Content Include="external\styles\dark.css" />
+    <Content Include="external\styles\default.css" />
+    <Content Include="external\styles\far.css" />
+    <Content Include="external\styles\github.css" />
+    <Content Include="external\styles\idea.css" />
+    <Content Include="external\styles\ir_black.css" />
+    <Content Include="external\styles\magula.css" />
+    <Content Include="external\styles\school_book.css" />
+    <Content Include="external\styles\school_book.png" />
+    <Content Include="external\styles\solarized_dark.css" />
+    <Content Include="external\styles\solarized_light.css" />
+    <Content Include="external\styles\sunburst.css" />
+    <Content Include="external\styles\vs.css" />
+    <Content Include="external\styles\zenburn.css" />
+    <Content Include="external\sylvester.src.js" />
+    <Content Include="h5gl\h5gl.boxbound.js" />
+    <Content Include="h5gl\h5gl.bspline.js" />
+    <Content Include="h5gl\h5gl.core.js" />
+    <Content Include="h5gl\h5gl.font.js" />
+    <Content Include="h5gl\h5gl.loader.js" />
+    <Content Include="h5gl\h5gl.simple3dwiredcontroller.js" />
+    <Content Include="h5gl\h5gl.sprite.js" />
+    <Content Include="h5gl_sprite_schema_generator.htm" />
+    <Content Include="Html5GameLibrary.htm" />
+    <Content Include="img\at.png" />
+    <Content Include="img\github.png" />
+    <Content Include="LICENSE.txt" />
+    <Content Include="style.css" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="demos\resources\__other\AllgemeineGuardPack.zip" />
+    <None Include="demos\resources\__other\DoomJedi_art.rar" />
+    <Content Include="demos\resources\__other\handdrawnshotgun.zip" />
+    <Content Include="demos\resources\__other\mp7hl2.zip" />
+    <None Include="demos\resources\__other\loadertype1.psd" />
+    <None Include="demos\resources\__other\Sporbs guns o doom.rar" />
+    <Content Include="demos\resources\__other\spritesp1.zip" />
+    <Content Include="demos\resources\__other\wsjafrikakorps.zip" />
+    <Content Include="demos\resources\__other\wsjallgemeine-ss.zip" />
+    <Content Include="demos\resources\__other\wsjheerpack.zip" />
+    <None Include="external\easycomments\ec-comment.php" />
+    <None Include="external\easycomments\moderate\.htaccess" />
+    <None Include="external\easycomments\moderate\ec-moderator.php" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1091</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
