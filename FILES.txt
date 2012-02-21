@@ -24,23 +24,3 @@ File description:
 
     ~/h5gl_sprite_schema_generator.htm, tool to generate sprite load schemas
 
-Colateral files:
-
-    (you can delete it safely)
-
-    I work either with Windows and Linux. On Windows, I use "Git Extensions" inside Visual Studio
-
-    ~/obj, VS runtime project files
-
-    ~/Html5GameLibrary.csproj, VS project file
-
-    ~/Html5GameLibrary.sln, VS solution file
-
-    ~/Html5GameLibrary.suo, VS user options file
-
-    ~/Web.Debug.config, .NET app configuration file (Debug version)
-
-    ~/Web.Release.config, .NET app configuration file (Release version)
-
-    ~/Web.config, .NET app configuration file (base version)
-
