@@ -7,7 +7,7 @@ demos.AttachDemo({
 
 	demo: {
 		title: "Simple Image Loader",
-		description: "Show how to use the <b>H5GL.Loader</b> object to preload and progress images.",
+		description: "Show how to use the <b>H5GL.Loader</b> object to preload and progress images.<br /><br /><b style='text-decoration: blink; color: red'>Reload page to uncache images!</b>",
 		sourcecode: "demos/simple.loader.js",
 		thumbnail: "demos/simple.loader.png"
 	},

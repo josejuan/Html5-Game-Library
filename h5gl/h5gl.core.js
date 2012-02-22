@@ -1,11 +1,12 @@
-/*
+﻿/*
  * -- JJBM, 19/01/2012, h5gl.core.js
  * -- JJBM, 19/01/2012, H5GL namespace
  * -- JJBM, 19/01/2012, H5GL.Object
  * -- JJBM, 19/01/2012, H5GL.EventHandler
  * -- JJBM, 19/01/2012, H5GL.Workspace
  * -- JJBM,	20/01/2012, H5GL.Controller
- * -- JJBM,	03/02/2012, rndf
+ * -- JJBM,	03/02/2012, H5GL.Workspace.rndf
+ * -- JJBM,	17/02/2012, H5GL.Workspace.drawPath
  * --/
  */
 
@@ -191,6 +192,12 @@ var H5GL = (function (h5gl) {
 
 			int rnd(int from, int to)
 
+			void drawPath({x, y} points, {
+					closed: false, // true to closed path
+					draw: true, // false to no stroke path (only set as current path)
+					color: none // to set path color
+				}), draw a path on current back buffer canvas
+
 		* Events
 
 			onUpdateViewport				// {width: <width>, height: <height>}
@@ -365,6 +372,25 @@ var H5GL = (function (h5gl) {
     				this.onUpdateViewport.Fire(this, null);
 				},
 
+			//draw path based on points
+			drawPath: function(points, options) {
+				var closed = options.closed || false;
+				var color = options.color || null;
+				var draw = options.draw || true;
+
+				var ct = this.__bcontext2d;
+				if(color != null)
+					ct.strokeStyle = color;
+				ct.beginPath();
+				ct.moveTo(points[0].x, points[0].y);
+				for(var n = 1, L = points.length; n < L; n++)
+						ct.lineTo(points[n].x, points[n].y);
+				if(closed)
+					ct.closePath();
+				if(draw)
+					ct.stroke();
+			},
+
 			// query if a keyCode is up (true) or down (false)
 			IsKeyDown:
 				function(keyCode) {
@@ -437,4 +463,3 @@ var H5GL = (function (h5gl) {
 
 	return h5gl;
 })(H5GL || {});
-

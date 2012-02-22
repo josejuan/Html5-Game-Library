@@ -12,7 +12,7 @@
 
 		demo: {
 			title: "Complex Image Loader",
-			description: "Show how to use the <b>H5GL.Loader</b> object catching explicitly the <b>onLoader</b> event.",
+			description: "Show how to use the <b>H5GL.Loader</b> object catching explicitly the <b>onLoader</b> event.<br /><br /><b style='text-decoration: blink; color: red'>Reload page to uncache images!</b>",
 			sourcecode: "demos/complex.loader.js",
 			thumbnail: "demos/complex.loader.png"
 		},

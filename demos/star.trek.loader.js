@@ -7,7 +7,7 @@ demos.AttachDemo({
 
 	demo: {
 		title: "Star Trek Loader",
-		description: "Show how to use the <b>H5GL.Loader</b> to create a beautiful (beautiful?) loader.",
+		description: "Show how to use the <b>H5GL.Loader</b> to create a beautiful (beautiful?) loader.<br /><br /><b style='text-decoration: blink; color: red'>Reload page to uncache images!</b>",
 		sourcecode: "demos/star.trek.loader.js",
 		thumbnail: "demos/star.trek.loader.png"
 	},

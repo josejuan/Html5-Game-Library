@@ -251,4 +251,3 @@ var H5GL = (function (h5gl) {
 
 	return h5gl;
 })(H5GL || {});
-
