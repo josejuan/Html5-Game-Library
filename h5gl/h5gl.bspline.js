@@ -115,12 +115,35 @@ var H5GL = (function (h5gl) {
 				var p0 = this.GetPoint(t0);
 				var pm = this.GetPoint(tm);
 				var p1 = this.GetPoint(t1);
-				var l0m = Math.sqrt(Math.pow(p0.x - pm.x) + Math.pow(p0.y - pm.y)); // optimize
-				var lm1 = Math.sqrt(Math.pow(pm.x - p1.x) + Math.pow(pm.y - p1.y)); // optimize
-				var l01 = Math.sqrt(Math.pow(p0.x - p1.x) + Math.pow(p0.y - p1.y)); // optimize
+				var l0m = Math.sqrt(Math.pow(p0.x - pm.x, 2) + Math.pow(p0.y - pm.y, 2)); // optimize
+				var lm1 = Math.sqrt(Math.pow(pm.x - p1.x, 2) + Math.pow(pm.y - p1.y, 2)); // optimize
+				var l01 = Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2)); // optimize
 				if(1.0 - l01 / (l0m + lm1) < max_length_error)
 					return l0m + lm1;
 				return this.ComputeSegmentLength(max_length_error, t0, tm) + this.ComputeSegmentLength(max_length_error, t0, tm);
+			},
+
+			/*
+				transform a length to a b-spline t parameter with linear segment interpolation, must be compute lengths
+
+				Possible improvement:
+
+					- best interpolation than linear
+
+				Possible optimizations:
+
+					- intermediate variables
+			*/
+			GetDistanceParameter: function(L) {
+				if(L <= 0)
+					return 0;
+				if(L >= this.curve_length)
+					return 1;
+				var n = 1; // minimum 1 segments
+				var v = this.length_marks;
+				while(v[n].L < L)
+					n++;
+				return v[n - 1].t + (v[n].t - v[n - 1].t) * (L - v[n - 1].L) / (v[n].L - v[n - 1].L);
 			},
 
 			/*
@@ -129,6 +152,7 @@ var H5GL = (function (h5gl) {
 				final_marks, number of 'final_marks' length marks are stored
 			*/
 			ComputeLengths: function(max_length_error, final_marks) {
+				this.marks_length = 1.0 / (final_marks - 1.0);
 				this.length_marks = []; /* {t: <parameter>, L: <accumulated length>}
 												first element (first mark) ever is
 														{t: 0, L: 0}
@@ -138,8 +162,39 @@ var H5GL = (function (h5gl) {
 				for(var n = 0; n < final_marks; n++)
 					this.length_marks[n] = {t: n / (final_marks - 1.0), L: 0.0};
 				for(var n = 1; n < final_marks; n++)
-					this.length_marks[n].L = this.ComputeSegmentLength(max_length_error, this.length_marks[n - 1].t, this.length_marks[n].t);
+					this.length_marks[n].L = this.length_marks[n - 1].L + this.ComputeSegmentLength(max_length_error, this.length_marks[n - 1].t, this.length_marks[n].t);
+
+				this.time_marks = []; /* only b-spline parameter are stored, ever is time_marks[0] == 0 and time_marks[N-1] == 1 */
+				this.curve_length = this.length_marks[this.length_marks.length - 1].L;
+				for(var n = 0; n < final_marks; n++)
+					this.time_marks[n] = this.GetDistanceParameter((this.curve_length * n) * this.marks_length);
+			},
+
+			/*
+				transform a t parameter with constant velocity to unnormalized b-spline t parameter
+
+				Possible improvements:
+
+					- use best interpolation method than linear
+
+				Possible optimizations:
+
+					- intermediate variables
+			*/
+			GetUnnormalizedArg: function(normalized_t) {
+				if(normalized_t <= 0)
+					return 0;
+				if(normalized_t >= 1)
+					return 1;
+				var n = normalized_t * (this.time_marks.length - 1); // never will be (this.time_marks.length - 1)
+				var q = ~~n;
+				return this.time_marks[q] + (this.time_marks[q + 1] - this.time_marks[q]) * (n - q);
+			},
+
+			GetNormalizedPoint: function(t) {
+				return this.GetPoint(this.GetUnnormalizedArg(t));
 			}
+
 
 		});
 

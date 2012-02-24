@@ -7,7 +7,7 @@ demos.AttachDemo({
 
 	demo: {
 		title: "Simple B-Spline",
-		description: "Show how to use <b>H5GL.BSpline</b> to manage b-spline objects.",
+		description: "Show how to use <b>H5GL.BSpline</b> to manage b-spline objects.<br /><br /><br />See <b>red</b> segment velocity <b>is not</b> constant.",
 		sourcecode: "demos/simple.bspline.js",
 		thumbnail: "demos/simple.bspline.png"
 	},
@@ -49,7 +49,7 @@ demos.AttachDemo({
 		var t = s.currentTime;
 		t *= 0.1;
 		t = t - ~~t;
-		s.drawPath(this.bspline.GetPointsFromTInterval(t, Math.min(1, t + 0.01), 0.001), {color: 'orange'});
+		s.drawPath(this.bspline.GetPointsFromTInterval(t, Math.min(1, t + 0.01), 0.001), {color: 'red'});
 
 
 	}

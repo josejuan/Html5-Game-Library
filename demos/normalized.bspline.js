@@ -7,7 +7,7 @@ demos.AttachDemo({
 
 	demo: {
 		title: "Normalized B-Spline",
-		description: "Show how to use <b>H5GL.BSpline</b> to manage b-spline objects with normalized parameter, length relative.",
+		description: "Show how to use <b>H5GL.BSpline</b> to manage b-spline objects with normalized parameter, length relative.<br /><br />See <b>orange</b> segment velocity <b>is</b> constant, but <b>red</b> segment velocity <b>is not</b> constant.<br /><br />Both (red and orange) segments depart and arrive at same time.",
 		sourcecode: "demos/simple.bspline.js",
 		thumbnail: "demos/simple.bspline.png"
 	},
@@ -29,6 +29,7 @@ demos.AttachDemo({
 		];
 		this.bspline1 = new H5GL.BSpline(this.points, false);
 		this.bspline2 = new H5GL.BSpline(this.points, false);
+		this.bspline2.ComputeLengths(0.99, 200);
 
 		s.__bcontext2d.lineWidth = 6;
 		s.__bcontext2d.lineCap = 'round';
@@ -50,7 +51,10 @@ demos.AttachDemo({
 		var t = s.currentTime;
 		t *= 0.1;
 		t = t - ~~t;
-		s.drawPath(this.bspline2.GetPointsFromTInterval(t, Math.min(1, t + 0.01), 0.001), {color: 'orange'});
+
+		s.drawPath([this.bspline2.GetNormalizedPoint(t), this.bspline2.GetNormalizedPoint(t + 0.005)], {color: 'orange'});
+
+		s.drawPath(this.bspline2.GetPointsFromTInterval(t, Math.min(1, t + 0.01), 0.001), {color: 'red'});
 
 
 	}
