@@ -209,7 +209,7 @@ h1, h2, h3, h3, h5
     overflow: scroll;
     height: 20px;
     background-color: #f5f9f3;
-    max-height: 400px;
+    /* max-height: 400px; */
     border: 1px solid #505050;
     padding: 0px;
     box-shadow: inset 2px 2px 3px #a0a0a0;

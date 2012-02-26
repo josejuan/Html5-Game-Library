@@ -1,17 +1,19 @@
 ﻿<!DOCTYPE html>
 <!--
  *
- * -- JJBM, 24/01/2012, Html5GameLibrary.htm
- * -- JJBM, 25/01/2012, h5gl.simple3dwiredcontroller.js
- * -- JJBM, 27/01/2012, h5gl.loader.js
- * -- JJBM, 28/01/2012, h5gl.boxbound.js
- * -- JJBM, 03/02/2012, h5gl.font.js
- * -- JJBM, 09/02/2012, h5gl.sprite.js
- * -- JJBM, 15/02/2012, some design jobs
- * --/
+ * JJBM, 24/01/2012, Html5GameLibrary.htm
+ * JJBM, 25/01/2012, h5gl.simple3dwiredcontroller.js
+ * JJBM, 27/01/2012, h5gl.loader.js
+ * JJBM, 28/01/2012, h5gl.boxbound.js
+ * JJBM, 03/02/2012, h5gl.font.js
+ * JJBM, 09/02/2012, h5gl.sprite.js
+ * JJBM, 15/02/2012, some design jobs
+ * JJBM, 26/02/2012, use "text/template" and other w3c validations
+ *
  *-->
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Html 5 Game Libray</title>
     <link rel="stylesheet" href="style.css" />
     <!--
@@ -77,13 +79,30 @@
             window.myWorkspace = g;
             {
                 var l = document.getElementById('demolist');
-                l.innerHTML = demos.GenerateDemoList(l.innerHTML);
+                l.innerHTML = demos.GenerateDemoList(document.getElementById('demo_template').innerHTML);
             }
             demos.SetCurrentDemo(g);
             window.scroll(0, 0);
 
     	}
 
+    </script>
+    <script id="demo_template" type="text/template">
+        <div id="demo{0}layout">
+            <br />
+            <div id="demo{0}info" class="demolistbutton">
+                <imgtag src="{4}" alt="{1}" />
+                <br />
+                <input type="button" value="view demo" onclick="demos.SetDemo(window.myWorkspace, {0})" />
+                <br />
+                <input type="button" value="source code" onclick="viewSourceCode('{3}')" />
+                <br />
+                <span id="demo{0}fps">?</span> fps
+            </div>
+            <h1>&lt;&lt;&nbsp;<span id="demolisttitle">{1}</span></h1>
+            <p class="demolistdescription">{2}</p>
+            <hr style="clear: both" />
+        </div>
     </script>
 
 
@@ -94,24 +113,28 @@
     <link rel="stylesheet" title="Default" href="external/styles/default.css">
     <script type="text/javascript" src="external/highlight.pack.js"></script>
     <script type="text/javascript">
+        function getCodeHeight() {
+            return ~~($(window).height() * 0.85);
+        }
         $(function() {
             $('#sourceCodeFooter > span').click(function () {
-                $('#sourceCodeBody').animate({height:'20px'}, 500, '', function () {$('#sourceCode').hide()});
+                $('#sourceCodeBody').animate({height:'20px'}, getCodeHeight(), '', function () {$('#sourceCode').hide()});
             });
-            $('#h5gl_code').find('span').filter('[rel^=h5]').css({
+            $('#h5gl_code').find('span').filter('[data-rel^=h5]').css({
                 cursor: 'pointer',
                 color: 'blue',
                 'text-decoration': 'underline'
             }).click(function () {
-                viewSourceCode($(this).attr('rel'));
+                viewSourceCode($(this).data('rel'));
             });
         });
         function viewSourceCode(url) {
             $.get(url, function(code) {
+                var h = getCodeHeight();
                 $('#sourceCodeText').text('\n' + code);
                 hljs.highlightBlock(document.getElementById('sourceCodeStyle'), null, true);
                 $('#sourceCode').show();
-                $('#sourceCodeBody').animate({height:'400px'}, 500);
+                $('#sourceCodeBody').animate({height: h+'px'}, h);
             });
         }
     </script>
@@ -154,7 +177,7 @@
             <div id="contact">
                 <ul>
                     <li>Yet another HTML5 game libray!</li>
-                    <li>h5gl&nbsp;<img src="img/at.png" alt="" style="vertical-align: bottom"/>computer-mind.com</i>
+                    <li>h5gl&nbsp;<img src="img/at.png" alt="" style="vertical-align: bottom"/>computer-mind.com</li>
                 </ul>
             </div>
             <span id="title"><b>H</b>thml <b>5</b> <b>G</b>ame <b>L</b>ibrary</span>
@@ -176,21 +199,6 @@
             <h2 id="demos_section">~/demos/</h2>
             <p class="sectiontext"><i>Can you press <b>Q</b> and <b>E</b> keys to activate previous and next demos.</i></p>
             <div id="demolist">
-                <div id="demo{0}layout">
-                    <br />
-                    <div id="demo{0}info" class="demolistbutton">
-                        <imgtag src="{4}" alt="{1}" />
-                        <br />
-                        <input type="button" value="view demo" onclick="demos.SetDemo(window.myWorkspace, {0})" />
-                        <br />
-                        <input type="button" value="source code" onclick="viewSourceCode('{3}')" />
-                        <br />
-                        <span id="demo{0}fps">?</span> fps
-                    </div>
-                    <h1>&lt;&lt;&nbsp;<span id="demolisttitle">{1}</span></h1>
-                    <p class="demolistdescription">{2}</p>
-                    <hr style="clear: both" />
-                </div>
             </div>
             <canvas id="playGround">
             </canvas>
@@ -199,6 +207,7 @@
             <h2 id="compatibility_section">~/what browsers?/</h2>
             <p class="sectiontext">I dev on <b>Firefox</b> and check speed and resources on <b>Chromium</b>. At this time, I don't check and debug bugs for browsers compatibility (neither the speed performance). I use <b>W3C</b> standar reference.</p>
             <p class="sectiontext">Anyway, here's a shallow performance test:<br />
+            </p>
             <ul class="mylist">
                 <li><b>»</b>&nbsp;Over <b>Windows Vista</b>:
                     <ul class="mylist">
@@ -216,7 +225,6 @@
                     </ul>
                 </li>
             </ul>
-            </p>
             <hr />
             <br />
             <h2 id="thanks_section">~/thanks to/</h2>
@@ -246,26 +254,24 @@
                 All javascript source code are not minified (you can read comments and my <b>frightful code</b> XD).<br /><br />
                 To see demos source code you can click on each <i>"source code"</i> demo button.<br /><br />
                 To see <b>H5GL</b> source code you can click on:<br /><br />
-                <ul id="h5gl_code" class="mylist">
-                    <li><b>»</b>&nbsp;<b>H5GL.Core</b>, (<span rel="h5gl/h5gl.core.js">source code</span>), the engine core.</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.BoxBound</b>, (<span rel="h5gl/h5gl.boxbound.js">source code</span>), manage boxes: bounds, mouse events, drag and drop, simply physics, ...</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.Font</b>, (<span rel="h5gl/h5gl.font.js">source code</span>), manage bitmaps fonts like <b>GLUT</b>.</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.Loader</b>, (<span rel="h5gl/h5gl.loader.js">source code</span>), manage images loading progress.</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.Simple3DWiredController</b>, (<span rel="h5gl/h5gl.simple3dwiredcontroller.js">source code</span>), a controller with 3D transformation and projection like (but much more simply) <b>OpenGL</b>.</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.Sprite</b>, (<span rel="h5gl/h5gl.sprite.js">source code</span>), manage sprite images: multiple subsprites on single image, sequences, ...</li>
-                    <li><b>»</b>&nbsp;<b>H5GL.BSpline</b>, (<span rel="h5gl/h5gl.bspline.js">source code</span>), coming soon...</li>
-                </ul>
             </p>
+            <ul id="h5gl_code" class="mylist">
+                <li><b>»</b>&nbsp;<b>H5GL.Core</b>, (<span data-rel="h5gl/h5gl.core.js">source code</span>), the engine core.</li>
+                <li><b>»</b>&nbsp;<b>H5GL.BoxBound</b>, (<span data-rel="h5gl/h5gl.boxbound.js">source code</span>), manage boxes: bounds, mouse events, drag and drop, simply physics, ...</li>
+                <li><b>»</b>&nbsp;<b>H5GL.Font</b>, (<span data-rel="h5gl/h5gl.font.js">source code</span>), manage bitmaps fonts like <b>GLUT</b>.</li>
+                <li><b>»</b>&nbsp;<b>H5GL.Loader</b>, (<span data-rel="h5gl/h5gl.loader.js">source code</span>), manage images loading progress.</li>
+                <li><b>»</b>&nbsp;<b>H5GL.Simple3DWiredController</b>, (<span data-rel="h5gl/h5gl.simple3dwiredcontroller.js">source code</span>), a controller with 3D transformation and projection like (but much more simply) <b>OpenGL</b>.</li>
+                <li><b>»</b>&nbsp;<b>H5GL.Sprite</b>, (<span data-rel="h5gl/h5gl.sprite.js">source code</span>), manage sprite images: multiple subsprites on single image, sequences, ...</li>
+                <li><b>»</b>&nbsp;<b>H5GL.BSpline</b>, (<span data-rel="h5gl/h5gl.bspline.js">source code</span>), manage b-spline curves. You can use as timeline (time normalized) path.</li>
+            </ul>
             <hr />
             <br />
             <h2 id="coming_soon_section">~/coming soon/</h2>
-            <p class="sectiontext">
-                <ul class="mylist">
-                    <li><b>2012 february 24 »</b>&nbsp;I would like develop a simple game for show a complete process...</li>
-                    <li><b>2012 february 24 »</b>&nbsp;ok, <b>b-spline</b> (with normalized time parameter) are now supported.</li>
-                    <li><b>2012 february 15 »</b>&nbsp;I don't know when I will invest time in H5GL. Probably I will add <b>b-spline</b> support... soon.</li>
-                </ul>
-            </p>
+            <ul class="mylist">
+                <li><b>2012 february 24 »</b>&nbsp;I would like develop a simple game for show a complete process...</li>
+                <li><b>2012 february 24 »</b>&nbsp;ok, <b>b-spline</b> (with normalized time parameter) are now supported.</li>
+                <li><b>2012 february 15 »</b>&nbsp;I don't know when I will invest time in H5GL. Probably I will add <b>b-spline</b> support... soon.</li>
+            </ul>
             <hr />
             <br />
             <h2 id="comments_section">~/comments/</h2>
