@@ -549,7 +549,7 @@ var H5GL = (function (h5gl) {
 
 				var A = this.__box_list;
 
-				// sort only when a zIndex change
+				// optimization, sort only when a zIndex change
 				A.sort(function(a, b) { if(a.z < b.z) return -1; if(a.z > b.z) return 1; return 0; });
 
 				for(var n = 0, L = A.length; n < L; n++)

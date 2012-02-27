@@ -8,8 +8,8 @@ demos.AttachDemo(new H5GL.BoxBound({
 	demo: {
 		title: "Simple Particles 2",
 		description: "Show how to use <b>H5GL. BoxBoundForces</b> to extend a <b>H5GL. BoxBoundBox</b> object and simulate (very simple) physics. If you need a more complex physics schema, I recommend to you use <b>Box2D</b> engine.",
-		sourcecode: "demos/simple.particles.js",
-		thumbnail: "demos/simple.particles.png"
+		sourcecode: "demos/simple.particles2.js",
+		thumbnail: "demos/simple.particles2.png"
 	},
 
 	started: false,
