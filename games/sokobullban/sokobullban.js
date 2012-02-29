@@ -28,9 +28,9 @@ function body_onLoad() {
 function create_Loader() {
 	return {
 		onControllerActivation: function(s, d) {
-			var il = {};
-			for(var n = 1; n <= 71; n++)
-				il['tux' + n] = {src: '../../demos/resources/tux/tux' + (n < 10 ? '0' : '') + n + '.png'};
+			var il = {
+				ground: {src: 'gfx/ground.jpg'}
+			};
 			s.loader = new H5GL.Loader(function(){}, il);
 			s.loader.Start();
 		},
@@ -187,7 +187,7 @@ function create_NewGame() {
 		onDraw: function(s, d) {
 			var vw = d.canvas.width;
 			var vh = d.canvas.height;
-			d.context.clearRect(0, 0, vw, vh);
+			d.context.drawImage(s.loader.Image('ground'), 0, 0);
 			s.font.DrawString(s, d,
 					"new game...",
 					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});

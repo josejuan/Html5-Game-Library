@@ -31,8 +31,7 @@ XXXXXXXXXX\n\
 X···XX··*X\n\
 X········X\n\
 X---XX|||X\n\
-XXXXXXXXXX\n\
-"
+XXXXXXXXXX"
 	},
 
 	{	id: "test2",
@@ -43,8 +42,7 @@ XXXXXXXXXX\n\
 X-··XX··*X\n\
 X········X\n\
 X·--XX|||X\n\
-·XXX··XXX·\n\
-"
+·XXX··XXX·"
 	}
 
 ];
