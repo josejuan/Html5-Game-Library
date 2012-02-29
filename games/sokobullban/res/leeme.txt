@@ -1,0 +1,6 @@
+" ", empty cell
+"#", wall
+"@", bulldozer
+".", objetive
+"$", source blocks
+"*", objetive over block
