@@ -29,7 +29,9 @@ function create_Loader() {
 	return {
 		onControllerActivation: function(s, d) {
 			var il = {
-				ground: {src: 'gfx/ground.jpg'}
+				ground: {src: 'gfx/ground.jpg'},
+				bulltop: {src: 'gfx/bull-top.png'},
+				bulltopshadow: {src: 'gfx/bull-top-shadow.png'}
 			};
 			s.loader = new H5GL.Loader(function(){}, il);
 			s.loader.Start();
@@ -181,13 +183,56 @@ function create_Game() {
 
 function create_NewGame() {
 	return {
+		drawBull: function(dc, x, y, direction, shadow) {
+			dc.save();
+			dc.translate(x, y);
+			var a = 0;
+			switch(direction) {
+				case 0: a = 3.1416; break;
+				case 1: a = -1.5708; break;
+				//case 2: a = 0; break;
+				case 3: a = 1.5708; break;
+			}
+			dc.rotate(a);
+			dc.drawImage(this.images.bulltopshadow, -23, -31);
+			dc.drawImage(this.images.bulltop, -23, -31);
+			dc.restore();
+		},
 		onControllerActivation: function(s, d) {
+			this.images = s.loader.__images;
 			this.currentOption = 0;
 		},
 		onDraw: function(s, d) {
+			var dc = d.context;
 			var vw = d.canvas.width;
 			var vh = d.canvas.height;
-			d.context.drawImage(s.loader.Image('ground'), 0, 0);
+
+			dc.drawImage(s.loader.__images.ground, 0, 0);
+
+			dc.beginPath();
+			dc.moveTo(100, 100);
+			dc.lineTo(150, 100);
+			dc.lineTo(150, 150);
+			dc.lineTo(100, 150);
+			dc.closePath();
+			dc.stroke();
+
+/*
+			dc.drawImage(s.loader.__images.bulltopshadow, 100, 100);
+			dc.drawImage(s.loader.__images.bulltop, 100, 100);
+*/
+			this.drawBull(dc, 125, 125, 0, true);
+			this.drawBull(dc, 125, 125, 0);
+
+			this.drawBull(dc, 175, 125, 1, true);
+			this.drawBull(dc, 175, 125, 1);
+
+			this.drawBull(dc, 225, 125, 2, true);
+			this.drawBull(dc, 225, 125, 2);
+
+			this.drawBull(dc, 275, 125, 3, true);
+			this.drawBull(dc, 275, 125, 3);
+
 			s.font.DrawString(s, d,
 					"new game...",
 					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});
