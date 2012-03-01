@@ -70,14 +70,7 @@ function create_Util() {
 		drawBull: function(dc, x, y, direction, shadow) {
 			dc.save();
 			dc.translate(x, y);
-			var a = 0;
-			switch(direction) {
-				case 0: a = 3.1416; break;
-				case 1: a = -1.5708; break;
-				//case 2: a = 0; break;
-				case 3: a = 1.5708; break;
-			}
-			dc.rotate(a);
+			dc.rotate(1.5708 * direction);
 			dc.drawImage(shadow ? this.images.bulltopshadow : this.images.bulltop, -23, -31);
 			dc.restore();
 		},
@@ -101,7 +94,7 @@ function create_Util() {
 		},
 		drawMap: function(dc, x, y, map, bullO, time, scale, rotate) {
 			dc.save();
-			dc.translate(x, y);
+			dc.translate(x + 18, y + 18);
 			if(scale)
 				dc.scale(scale, scale);
 			if(rotate)
@@ -118,8 +111,21 @@ function create_Util() {
 			for(var n = 0, L = map.dst.length; n < L; n++)
 				this.drawDst(dc, left + 50 * map.dst[n].x, top + 50 * map.dst[n].y, false, time);
 			this.drawBull(dc, left + 50 * map.bull.x, top + 50 * map.bull.y, bullO, false);
-			for(var n = 0, L = map.cont.length; n < L; n++)
-				this.drawCont(dc, left + 50 * map.cont[n].x, top + 50 * map.cont[n].y, false);
+			for(var n = 0, L = map.cont.length; n < L; n++) {
+				var t = false;
+				var x = map.cont[n].x;
+				var y = map.cont[n].y;
+				for(var d = 0, M = map.dst.length; d < M; d++)
+					if(map.dst[d].x == x && map.dst[d].y == y) {
+						t = true;
+						break;
+					}
+				if(t)
+					dc.globalAlpha = 0.75;
+				this.drawCont(dc, left + 50 * x, top + 50 * y, false);
+				if(t)
+					dc.globalAlpha = 1;
+			}
 			for(var n = 0, L = map.wall.length; n < L; n++)
 				this.drawWall(dc, left + 50 * map.wall[n].x, top + 50 * map.wall[n].y);
 			dc.restore();
@@ -214,18 +220,23 @@ var sbb_map = function(idx_map) {
 	var wallL = [];
 	var bull = {x: 0, y: 0};
 	var map = sokomaps[idx_map].map.split('\n');
-	for(var r = 0, L = map.length, H = map[0].length; r < L; r++)
+	var cols = 0;
+	for(var r = 0, L = map.length; r < L; r++) {
+		var H = map[r].length;
+		if(H > cols)
+			cols = H;
 		for(var c = 0; c < H; c++) {
 			var w = map[r][c];
 			var p = {x: c, y: r};
-			if(w == '@' || w == '*') bull = p;
-			if(w == '*' || w == '-' || w == '+') dstL.push(p);
-			if(w == '|' || w == '+') contL.push(p);
-			if(w == 'X') wallL.push(p);
+			if(w == 'U' || w == 'A') bull = p;
+			if(w == 'A' || w == 'x' || w == '@') dstL.push(p);
+			if(w == 'o' || w == '@') contL.push(p);
+			if(w == 'W') wallL.push(p);
 		}
+	}
 	var self = {
 		idx: idx_map,
-		cols: map[0].length,
+		cols: cols,
 		rows: map.length,
 		dst: dstL,
 		cont: contL,
@@ -265,6 +276,72 @@ function create_Help() {
 
 function create_Game() {
 	return {
+		ANIMATIONTIME: 0.5,
+		state: 0,
+			/*
+				0 - wait orders
+				1 - bull moving -> pA t pB
+				2 - bull rotating -> rA to rB
+			*/
+		direction: 0,
+		onControllerActivation: function(s, d) {
+			this.map = s.ctlNewGame.map;
+			this.scale = 10.0 / Math.max(this.map.cols, this.map.rows);
+			this.state = 0;
+			this.direction = 0;
+		},
+		onDraw: function(s, d) {
+			var dc = d.context;
+			var vw = d.canvas.width;
+			var vh = d.canvas.height;
+
+			dc.drawImage(s.util.images.ground, 0, 0);
+
+			switch(this.state) {
+				case 0:
+					break;
+				case 2:
+					break;
+			}
+
+			s.util.drawMap(dc, vw >> 1, vh >> 1, this.map, this.direction, s.currentTime, this.scale, 0);
+		},
+		onKeyUp: function(s, d) {
+			if(d.keyCode == 27) {
+				s.DetachController('game');
+				s.AttachController('menu', s.ctlMenu);
+				return;
+			}
+			if(this.state != 0)
+				return;
+			this.animationStartTime = s.currentTime;
+			switch(d.keyCode) {
+				case 37: // left
+					this.state = 2;
+					this.rA = this.direction;
+					this.rB = 1;
+					this.pA =
+					break;
+				case 38: // top
+					break;
+				case 39: // right
+					break;
+				case 40: // bottom
+					break;
+				case 13:
+					break;
+				default:
+					console.log(d.keyCode);
+					break;
+			}
+		}
+	};
+}
+
+//=== create_NewGame ==============================================================================
+
+function create_NewGame() {
+	return {
 		ANIMATIONTIME: 0.5, // seconds
 		state: 0,	/* 0 - in, 1 - static, 2 - out */
 		onControllerActivation: function(s, d) {
@@ -280,24 +357,25 @@ function create_Game() {
 			dc.drawImage(s.util.images.ground, 0, 0);
 
 			var scale, position;
+			var mscale = 10.0 / Math.sqrt(this.map.cols * this.map.cols + this.map.rows * this.map.rows);
 			switch(this.state) {
 				case 0: {
 						var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
-						scale = 0.5 * t;
-						position = vh * (1 - scale);
-						if(scale > 0.5)
+						scale = mscale * t;
+						position = vh * (1 - 0.5 * t);
+						if(t > 1)
 							this.state = 1;
 					}
 					break;
 				case 1:
-					scale = 0.5 + 0.005 * Math.cos(4 * s.currentTime);
+					scale = mscale + 0.005 * Math.cos(4 * s.currentTime);
 					position = vh >> 1;
 					break;
 				case 2: {
 						var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
-						scale = 0.5 * (1 - t);
-						position = vh * (1 - scale);
-						if(scale < 0) {
+						scale = mscale * (1 - t);
+						position = vh * 0.5 * (1 + t);
+						if(t > 1) {
 							this.map = this.nextMap;
 							this.state = 0;
 							this.animationStartTime = s.currentTime;
@@ -305,16 +383,16 @@ function create_Game() {
 					}
 					break;
 			}
+
 			s.util.drawMap(dc, vw >> 1, position, this.map, 0, s.currentTime, scale, s.currentTime * 0.1);
 
-			s.font.DrawString(s, d,
-					"game...",
-					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});
+			s.font.DrawString(s, d, "Map number " + (this.map.idx + 1), {x: 10, y: 10, maxheight: 25});
 		},
 		onKeyUp: function(s, d) {
 			switch(d.keyCode) {
 				case 27: // ESC
-					s.DetachController('game');
+					this.map = null; // no map selected
+					s.DetachController('newgame');
 					s.AttachController('menu', s.ctlMenu);
 					break;
 				case 37:
@@ -323,31 +401,14 @@ function create_Game() {
 					this.animationStartTime = s.currentTime;
 					break;
 				case 39:
+					this.nextMap = new sbb_map((this.map.idx + sokomaps.length - 1) % sokomaps.length);
+					this.state = 2;
+					this.animationStartTime = s.currentTime;
 					break;
-			}
-		}
-	};
-}
-
-//=== create_NewGame ==============================================================================
-
-function create_NewGame() {
-	return {
-		selectedMap: 0,
-		onControllerActivation: function(s, d) {
-		},
-		onDraw: function(s, d) {
-			var dc = d.context;
-			var vw = d.canvas.width;
-			var vh = d.canvas.height;
-			s.font.DrawString(s, d,
-					"new game...",
-					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});
-		},
-		onKeyUp: function(s, d) {
-			if(d.keyCode == 27) {
-				s.DetachController('newgame');
-				s.AttachController('menu', s.ctlMenu);
+				case 13:
+					s.DetachController('newgame');
+					s.AttachController('game', s.ctlGame);
+					break;
 			}
 		}
 	};
