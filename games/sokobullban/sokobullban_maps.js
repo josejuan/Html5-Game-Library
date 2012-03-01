@@ -14,7 +14,8 @@
 
 		"·", empty cell
 		"X", solid wall
-		"*", bulldozer start point
+		"@", bulldozer start point
+		"*", bulldozer over a objetive platform
 		"-", objetive platform
 		"|", block to move to objetive platform
 		"+", block over a objetive platform
@@ -28,7 +29,7 @@ var sokomaps = [
 		description: "A simple test map",
 		map: "\
 XXXXXXXXXX\n\
-X···XX··*X\n\
+X···XX··@X\n\
 X········X\n\
 X---XX|||X\n\
 XXXXXXXXXX"
@@ -39,7 +40,7 @@ XXXXXXXXXX"
 		description: "Other simple test map",
 		map: "\
 ·XXX··XXX·\n\
-X-··XX··*X\n\
+X-··XX··@X\n\
 X········X\n\
 X·--XX|||X\n\
 ·XXX··XXX·"
