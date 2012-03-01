@@ -12,7 +12,7 @@
 
 	Map symbols:
 
-		"·", empty cell
+		" ", empty cell
 		"X", solid wall
 		"@", bulldozer start point
 		"*", bulldozer over a objetive platform
@@ -29,9 +29,9 @@ var sokomaps = [
 		description: "A simple test map",
 		map: "\
 XXXXXXXXXX\n\
-X···XX··@X\n\
-X········X\n\
-X---XX|||X\n\
+X    X  @X\n\
+X  X X X X\n\
+X--X  |X|X\n\
 XXXXXXXXXX"
 	},
 
@@ -39,11 +39,11 @@ XXXXXXXXXX"
 		name: "Test map 2",
 		description: "Other simple test map",
 		map: "\
-·XXX··XXX·\n\
-X-··XX··@X\n\
-X········X\n\
-X·--XX|||X\n\
-·XXX··XXX·"
+ XXX  XXX \n\
+X-  XX  @X\n\
+X        X\n\
+X --XX|||X\n\
+ XXX  XXX "
 	}
 
 ];
