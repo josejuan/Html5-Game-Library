@@ -243,7 +243,23 @@ var sbb_map = function(idx_map) {
 		bull: bull,
 		wall: wallL,
 		width: 50 * map[0].length,
-		height: 50 * map.length
+		height: 50 * map.length,
+		Cell: function(x, y) {
+			if(x < 0 || x >= this.cols || y < 0 || y >= this.rows)
+				return '!';
+			for(var n = 0, A = this.wall, L = A.length; n < L; n++) if(A[n].x == x && A[n].y == y) return 'W';
+			for(var n = 0, A = this.cont, L = A.length; n < L; n++) if(A[n].x == x && A[n].y == y) return 'o';
+			for(var n = 0, A = this.dst, L = A.length; n < L; n++) if(A[n].x == x && A[n].y == y) return 'x';
+			return ' ';
+		},
+		getCont: function(x, y) {
+			if(x < 0 || x >= this.cols || y < 0 || y >= this.rows)
+				return null;
+			for(var n = 0, A = this.cont, L = A.length; n < L; n++)
+				if(A[n].x == x && A[n].y == y)
+					return A[n];
+			return null;
+		}
 	};
 	return self;
 };
@@ -280,8 +296,9 @@ function create_Game() {
 		state: 0,
 			/*
 				0 - wait orders
-				1 - bull moving -> pA t pB
+				1 - bull moving in progress -> pA to pB
 				2 - bull rotating -> rA to rB
+				3 - bull translating -> pA to pB
 			*/
 		direction: 0,
 		onControllerActivation: function(s, d) {
@@ -300,11 +317,81 @@ function create_Game() {
 			switch(this.state) {
 				case 0:
 					break;
+				case 1:
+					{ // compute necesary direction
+						var dx = this.pB.x - this.pA.x;
+						var dy = this.pB.y - this.pA.y;
+						var d;
+						if(dx == 0)	d = dy < 0 ? 2 : 0;
+						else		d = dx < 0 ? 1 : 3;
+						// do move or rotate
+						var cd = Math.round(this.direction);
+						if(d == cd) {
+							this.state = 3;
+						} else {
+							this.state = 2;
+							this.rA = this.direction;
+							// rotate to
+							if(d == 3 && cd == 0)
+								this.rB = -1;
+							else
+								if(d == 0 && cd == 3)
+									this.rB = 4;
+								else
+									if(Math.abs(d - cd) > 1)
+										this.rB = (d + cd) >> 1;
+									else
+										this.rB = d;
+						}
+						this.animationStartTime = s.currentTime;
+					}
+					break;
 				case 2:
+					{ // rotating
+						var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
+						if(t > 1) {
+							this.state = 1;
+							this.direction = (Math.round(this.direction) + 4) % 4;
+						} else
+							this.direction = this.rA * (1 - t) + this.rB * t;
+					}
+					break;
+				case 3:
+					{ // moving
+						var t = (s.currentTime - this.animationStartTime) / (2 * this.ANIMATIONTIME);
+						if(t > 1) {
+							this.state = 0;
+							this.map.bull = this.pB;
+						} else {
+							this.map.bull.x = this.pA.x * (1 - t) + this.pB.x * t;
+							this.map.bull.y = this.pA.y * (1 - t) + this.pB.y * t;
+						}
+					}
 					break;
 			}
 
 			s.util.drawMap(dc, vw >> 1, vh >> 1, this.map, this.direction, s.currentTime, this.scale, 0);
+		},
+		// check if this.pB is a bull legal movement and set for animate
+		MoveIfLegal: function(dx, dy) {
+			var cp = this.map.bull;
+			var np = {x: cp.x + dx, y: cp.y + dy};
+			this.pA = {x: cp.x, y: cp.y};
+			this.pB = np;
+			this.curCont = null;
+			var ct = this.map.Cell(np.x, np.y);
+			if(ct == ' ' || ct == 'x')
+				this.state = 1;
+			else
+				if(ct == 'o') {
+					var cnp = {x: np.x + dx, y: np.y + dy};
+					var cct = this.map.Cell(cnp.x, cnp.y);
+					if(cct == ' ' || cct == 'x') {
+						this.state = 1;
+						this.curCont = this.map.getCont(np.x + dx, np.y + dy);
+						this.cpA = {x: np.x + dx, y: np.y + dy};
+					}
+				}
 		},
 		onKeyUp: function(s, d) {
 			if(d.keyCode == 27) {
@@ -314,20 +401,11 @@ function create_Game() {
 			}
 			if(this.state != 0)
 				return;
-			this.animationStartTime = s.currentTime;
 			switch(d.keyCode) {
-				case 37: // left
-					this.state = 2;
-					this.rA = this.direction;
-					this.rB = 1;
-					this.pA =
-					break;
-				case 38: // top
-					break;
-				case 39: // right
-					break;
-				case 40: // bottom
-					break;
+				case 37: /* left   */ this.MoveIfLegal(-1,  0); break;
+				case 38: /* top    */ this.MoveIfLegal( 0, -1); break;
+				case 39: /* right  */ this.MoveIfLegal( 1,  0); break;
+				case 40: /* bottom */ this.MoveIfLegal( 0,  1); break;
 				case 13:
 					break;
 				default:
