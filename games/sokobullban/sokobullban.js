@@ -42,7 +42,9 @@ function create_Loader() {
 				conttopshadow: {src: 'gfx/cont-top-shadow.png'},
 				walltop: {src: 'gfx/wall-top.png'},
 				dsttop: {src: 'gfx/dst-top.png'},
-				dsttopshadow: {src: 'gfx/dst-top-shadow.png'}
+				dsttopshadow: {src: 'gfx/dst-top-shadow.png'},
+				logo: {src: 'gfx/logo.png'},
+				bull: {src: 'gfx/bull.png'}
 			};
 			this.loader = new H5GL.Loader(function(){}, il);
 			this.loader.Start();
@@ -94,9 +96,10 @@ function create_Util() {
 		},
 		drawMap: function(dc, x, y, map, bullO, time, scale, rotate) {
 			dc.save();
-			dc.translate(x + 18, y + 18);
+			dc.translate(x, y);
 			if(scale)
 				dc.scale(scale, scale);
+			dc.translate(25, 25);
 			if(rotate)
 				dc.rotate(rotate)
 			var left = -25 * map.cols; // -50 * cols / 2
@@ -140,18 +143,38 @@ function create_Menu() {
 
 		options: ["New game", "Continue game", "Credits", "Help"],
 		currentOption: 0,
-
+		ANIMATIONTIME: 0.5,
+		onControllerActivation: function(s, d) {
+			this.animationStartTime = s.currentTime;
+		},
 		onDraw: function(s, d) {
+			var dc = d.context;
 			var vw = d.canvas.width;
 			var vh = d.canvas.height;
-			d.context.clearRect(0, 0, vw, vh);
+
+			dc.drawImage(s.util.images.ground, 0, 0);
 
 			var dy = vh / (this.options.length + 1);
+			var dx = 100;
 
 			for(var n = 0; n < this.options.length; n++)
 				s.font.DrawString(s, d,
-					(n == this.currentOption ? ">>> " : "") + this.options[n] + (n == this.currentOption ? " <<<" : ""),
-					{x: vw >> 1, y: dy * (n + 1), center: true, middle: true, maxheight: 25});
+					this.options[n],
+					{x: dx, y: dy * (n + 1), middle: true, maxheight: 25});
+
+			s.util.drawBull(dc, dx - 40 + 5 * Math.cos(5 * s.currentTime), dy * (this.currentOption + 1), 3, true);
+			s.util.drawBull(dc, dx - 40 + 5 * Math.cos(5 * s.currentTime), dy * (this.currentOption + 1), 3, false);
+
+			dc.save();
+			dc.translate(345, 360);
+			var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
+			if(t <= 1) {
+				var k = 10 * (1 - t) + t;
+				dc.scale(k, k);
+			}
+			dc.drawImage(s.util.images.logo, -145, -130);
+			dc.restore();
+
 		},
 		onKeyUp: function(s, d) {
 			switch(d.keyCode) {
@@ -168,8 +191,10 @@ function create_Menu() {
 							s.AttachController('newgame', s.ctlNewGame);
 							break;
 						case 1:
-							s.DetachController('menu');
-							s.AttachController('game', s.ctlGame);
+							if(s.ctlGame.map != null || s.ctlNewGame.map != null) {
+								s.DetachController('menu');
+								s.AttachController('game', s.ctlGame);
+							}
 							break;
 						case 2:
 							s.DetachController('menu');
@@ -193,16 +218,46 @@ function create_Menu() {
 
 function create_Credits() {
 	return {
+		size: 18,
+		txt: "\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+SOKO BULL BAN\n\
+=============\n\
+\n\
+\n\
+Yet another Sudoku game.\n\
+\n\
+\n\
+Author:\n\
+\n\
+     http://jose-juan.computer-mind.com\n\
+\n\
+\n\
+Game engine:\n\
+\n\
+     http://h5gl.computer-mind.com\n\
+\n\
+\n\
+Enjoy it!\n\
+",
 		onControllerActivation: function(s, d) {
-			this.currentOption = 0;
+			this.vtext = this.txt.split('\n');
 		},
 		onDraw: function(s, d) {
+			var dc = d.context;
 			var vw = d.canvas.width;
 			var vh = d.canvas.height;
-			d.context.clearRect(0, 0, vw, vh);
-			s.font.DrawString(s, d,
-					"credits...",
-					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});
+			dc.drawImage(s.util.images.ground, 0, 0);
+			for(var n = 0, A = this.vtext, L = A.length; n < L; n++)
+				s.font.DrawString(s, d, A[n], {x: 25, y: n * this.size, maxheight: this.size});
+			dc.drawImage(s.util.images.bull, -15, 10);
 		},
 		onKeyUp: function(s, d) {
 			if(d.keyCode == 27) {
@@ -259,6 +314,19 @@ var sbb_map = function(idx_map) {
 				if(A[n].x == x && A[n].y == y)
 					return A[n];
 			return null;
+		},
+		isSolved: function() {
+			for(var n = 0, A = this.cont, L = A.length; n < L; n++) {
+				var inplace = false;
+				for(var m = 0, B = this.dst, M = B.length; m < M; m++)
+					if(A[n].x == B[m].x && A[n].y == B[m].y) {
+						inplace = true;
+						break;
+					}
+				if(!inplace)
+					return false;
+			}
+			return true;
 		}
 	};
 	return self;
@@ -268,16 +336,38 @@ var sbb_map = function(idx_map) {
 
 function create_Help() {
 	return {
+		size: 18,
+		txt: "\
+KEYS\n\
+====\n\
+\n\
+<arrows>, move bulldozer.\n\
+<ESC>, exit current page.\n\
+<+/->, control game speed.\n\
+\n\
+\n\
+GAME\n\
+====\n\
+\n\
+You must move all containers\n\
+over destination platforms.\n\
+\n\
+You only can push container, not pull.\n\
+\n\
+\n\
+Good luck!\n\
+",
 		onControllerActivation: function(s, d) {
-			this.currentOption = 0;
+			this.vtext = this.txt.split('\n');
 		},
 		onDraw: function(s, d) {
+			var dc = d.context;
 			var vw = d.canvas.width;
 			var vh = d.canvas.height;
-			d.context.clearRect(0, 0, vw, vh);
-			s.font.DrawString(s, d,
-					"help...",
-					{x: vw >> 1, y: vh >> 1, center: true, middle: true, maxheight: 25});
+			dc.drawImage(s.util.images.ground, 0, 0);
+			for(var n = 0, A = this.vtext, L = A.length; n < L; n++)
+				s.font.DrawString(s, d, A[n], {x: 25, y: n * this.size, maxheight: this.size});
+			dc.drawImage(s.util.images.bull, -15, 10);
 		},
 		onKeyUp: function(s, d) {
 			if(d.keyCode == 27) {
@@ -292,20 +382,35 @@ function create_Help() {
 
 function create_Game() {
 	return {
-		ANIMATIONTIME: 0.5,
+		ANIMATIONTIME: (1/5),
+		animationSpeed: 5,
 		state: 0,
 			/*
 				0 - wait orders
 				1 - bull moving in progress -> pA to pB
 				2 - bull rotating -> rA to rB
 				3 - bull translating -> pA to pB
+
+				4 - game completed!
 			*/
 		direction: 0,
+
+		lastMessageTime: -1000,
+		lastMessage: "",
+		Message: function(message) {
+			this.lastMessageTime = this.ws.currentTime + 2;
+			this.lastMessage = message;
+		},
+
 		onControllerActivation: function(s, d) {
-			this.map = s.ctlNewGame.map;
-			this.scale = 10.0 / Math.max(this.map.cols, this.map.rows);
-			this.state = 0;
-			this.direction = 0;
+			if(this.map == null) {
+				this.map = s.ctlNewGame.map;
+				console.log(this.map);
+				this.scale = 10.0 / Math.max(this.map.cols, this.map.rows);
+				this.state = 0;
+				this.direction = 0;
+				this.ws = s;
+			}
 		},
 		onDraw: function(s, d) {
 			var dc = d.context;
@@ -314,6 +419,13 @@ function create_Game() {
 
 			dc.drawImage(s.util.images.ground, 0, 0);
 
+			if(this.state == 0) {
+				if(s.IsKeyDown(37 /* left   */)) this.MoveIfLegal(-1,  0);
+				if(s.IsKeyDown(38 /* top    */)) this.MoveIfLegal( 0, -1);
+				if(s.IsKeyDown(39 /* right  */)) this.MoveIfLegal( 1,  0);
+				if(s.IsKeyDown(40 /* bottom */)) this.MoveIfLegal( 0,  1);
+			}
+
 			switch(this.state) {
 				case 0:
 					break;
@@ -321,27 +433,27 @@ function create_Game() {
 					{ // compute necesary direction
 						var dx = this.pB.x - this.pA.x;
 						var dy = this.pB.y - this.pA.y;
-						var d;
-						if(dx == 0)	d = dy < 0 ? 2 : 0;
-						else		d = dx < 0 ? 1 : 3;
+						var dd;
+						if(dx == 0)	dd = dy < 0 ? 2 : 0;
+						else		dd = dx < 0 ? 1 : 3;
 						// do move or rotate
 						var cd = Math.round(this.direction);
-						if(d == cd) {
+						if(dd == cd) {
 							this.state = 3;
 						} else {
 							this.state = 2;
 							this.rA = this.direction;
 							// rotate to
-							if(d == 3 && cd == 0)
+							if(dd == 3 && cd == 0)
 								this.rB = -1;
 							else
-								if(d == 0 && cd == 3)
+								if(dd == 0 && cd == 3)
 									this.rB = 4;
 								else
-									if(Math.abs(d - cd) > 1)
-										this.rB = (d + cd) >> 1;
+									if(Math.abs(dd - cd) > 1)
+										this.rB = (dd + cd) >> 1;
 									else
-										this.rB = d;
+										this.rB = dd;
 						}
 						this.animationStartTime = s.currentTime;
 					}
@@ -358,19 +470,40 @@ function create_Game() {
 					break;
 				case 3:
 					{ // moving
-						var t = (s.currentTime - this.animationStartTime) / (2 * this.ANIMATIONTIME);
+						var t = (s.currentTime - this.animationStartTime) / ((this.curCont != null ? 4 : 2) * this.ANIMATIONTIME);
 						if(t > 1) {
 							this.state = 0;
 							this.map.bull = this.pB;
+							if(this.curCont != null) {
+								// don't replace object! (references object is on this.map.dst array)
+								this.curCont.x = this.cpB.x;
+								this.curCont.y = this.cpB.y;
+								// desref
+								this.curCont = null;
+								// ¿solved?
+								if(this.map.isSolved())
+									this.state = 4;
+							}
 						} else {
 							this.map.bull.x = this.pA.x * (1 - t) + this.pB.x * t;
 							this.map.bull.y = this.pA.y * (1 - t) + this.pB.y * t;
+							if(this.curCont != null) {
+								this.curCont.x = this.cpA.x * (1 - t) + this.cpB.x * t;
+								this.curCont.y = this.cpA.y * (1 - t) + this.cpB.y * t;
+							}
 						}
 					}
 					break;
 			}
 
 			s.util.drawMap(dc, vw >> 1, vh >> 1, this.map, this.direction, s.currentTime, this.scale, 0);
+
+			if(this.state == 4)
+				s.font.DrawString(s, d, "MAP SOLVED!", {x: vw >> 1, y: vh >> 1, center: true, middle: true, maxwidth: 250});
+			else {
+				if(this.lastMessageTime > s.currentTime)
+					s.font.DrawString(s, d, this.lastMessage, {x: 10, y: 10, maxheight: 25});
+			}
 		},
 		// check if this.pB is a bull legal movement and set for animate
 		MoveIfLegal: function(dx, dy) {
@@ -388,10 +521,13 @@ function create_Game() {
 					var cct = this.map.Cell(cnp.x, cnp.y);
 					if(cct == ' ' || cct == 'x') {
 						this.state = 1;
-						this.curCont = this.map.getCont(np.x + dx, np.y + dy);
-						this.cpA = {x: np.x + dx, y: np.y + dy};
+						this.curCont = this.map.getCont(np.x, np.y);
+						this.cpA = np;
+						this.cpB = cnp;
 					}
 				}
+			if(this.state != 1)
+				this.Message("Ilegal movement!");
 		},
 		onKeyUp: function(s, d) {
 			if(d.keyCode == 27) {
@@ -402,10 +538,18 @@ function create_Game() {
 			if(this.state != 0)
 				return;
 			switch(d.keyCode) {
-				case 37: /* left   */ this.MoveIfLegal(-1,  0); break;
-				case 38: /* top    */ this.MoveIfLegal( 0, -1); break;
-				case 39: /* right  */ this.MoveIfLegal( 1,  0); break;
-				case 40: /* bottom */ this.MoveIfLegal( 0,  1); break;
+				case 107:
+					if(this.animationSpeed < 10)
+						this.animationSpeed++;
+					this.Message(this.animationSpeed + " current game speed!");
+					this.ANIMATIONTIME = 1.0 / this.animationSpeed;
+					break;
+				case 109:
+					if(this.animationSpeed > 1)
+						this.animationSpeed--;
+					this.Message(this.animationSpeed + " current game speed!");
+					this.ANIMATIONTIME = 1.0 / this.animationSpeed;
+					break;
 				case 13:
 					break;
 				default:
@@ -420,7 +564,7 @@ function create_Game() {
 
 function create_NewGame() {
 	return {
-		ANIMATIONTIME: 0.5, // seconds
+		ANIMATIONTIME: 0.75, // seconds
 		state: 0,	/* 0 - in, 1 - static, 2 - out */
 		onControllerActivation: function(s, d) {
 			this.map = new sbb_map(0);
@@ -435,24 +579,21 @@ function create_NewGame() {
 			dc.drawImage(s.util.images.ground, 0, 0);
 
 			var scale, position;
-			var mscale = 10.0 / Math.sqrt(this.map.cols * this.map.cols + this.map.rows * this.map.rows);
+			var mscale = 9.0 / Math.max(this.map.cols, this.map.rows) + 0.005 * Math.cos(4 * s.currentTime);
 			switch(this.state) {
 				case 0: {
 						var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
 						scale = mscale * t;
-						position = vh * (1 - 0.5 * t);
 						if(t > 1)
 							this.state = 1;
 					}
 					break;
 				case 1:
-					scale = mscale + 0.005 * Math.cos(4 * s.currentTime);
-					position = vh >> 1;
+					scale = mscale;
 					break;
 				case 2: {
 						var t = (s.currentTime - this.animationStartTime) / this.ANIMATIONTIME;
 						scale = mscale * (1 - t);
-						position = vh * 0.5 * (1 + t);
 						if(t > 1) {
 							this.map = this.nextMap;
 							this.state = 0;
@@ -462,7 +603,7 @@ function create_NewGame() {
 					break;
 			}
 
-			s.util.drawMap(dc, vw >> 1, position, this.map, 0, s.currentTime, scale, s.currentTime * 0.1);
+			s.util.drawMap(dc, vw >> 1, vh >> 1, this.map, 0, s.currentTime, scale, 0);
 
 			s.font.DrawString(s, d, "Map number " + (this.map.idx + 1), {x: 10, y: 10, maxheight: 25});
 		},
@@ -484,6 +625,7 @@ function create_NewGame() {
 					this.animationStartTime = s.currentTime;
 					break;
 				case 13:
+					s.ctlGame.map = null;
 					s.DetachController('newgame');
 					s.AttachController('game', s.ctlGame);
 					break;

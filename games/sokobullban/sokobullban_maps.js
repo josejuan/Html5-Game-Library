@@ -25,6 +25,15 @@
 var sokomaps = [
 
 {map: "\
+WWWWWW\n\
+Wx   W\n\
+Woo xW\n\
+W  o W\n\
+WU x W\n\
+WWWWWW"
+},
+
+{map: "\
      WWWWWWWWW\n\
      Wxxx  x W\n\
   WWWW WxWx  W\n\
