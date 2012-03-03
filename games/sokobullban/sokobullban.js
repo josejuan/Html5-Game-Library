@@ -44,7 +44,8 @@ function create_Loader() {
 				dsttop: {src: 'gfx/dst-top.png'},
 				dsttopshadow: {src: 'gfx/dst-top-shadow.png'},
 				logo: {src: 'gfx/logo.png'},
-				bull: {src: 'gfx/bull.png'}
+				bull: {src: 'gfx/bull.png'},
+				cont: {src: 'gfx/cont.png'}
 			};
 			this.loader = new H5GL.Loader(function(){}, il);
 			this.loader.Start();
@@ -338,6 +339,14 @@ function create_Help() {
 	return {
 		size: 18,
 		txt: "\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
 KEYS\n\
 ====\n\
 \n\
@@ -367,7 +376,7 @@ Good luck!\n\
 			dc.drawImage(s.util.images.ground, 0, 0);
 			for(var n = 0, A = this.vtext, L = A.length; n < L; n++)
 				s.font.DrawString(s, d, A[n], {x: 25, y: n * this.size, maxheight: this.size});
-			dc.drawImage(s.util.images.bull, -15, 10);
+			dc.drawImage(s.util.images.cont, 70, 10);
 		},
 		onKeyUp: function(s, d) {
 			if(d.keyCode == 27) {

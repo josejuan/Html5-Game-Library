@@ -11,7 +11,7 @@ demos.AttachDemo(
 
 		demo: {
 			title: "Simple 3D Forest",
-			description: "Show how to use <b>H5GL.Simple3DWiredController</b> to create a 3D world of 2D sprites (like <b>3D Wolfenstein</b>). Use <b>AWSD</b> to move and <b>KL</b> keys to twist camera.",
+			description: "Show how to use <b>H5GL. Simple3DWiredController</b> to create a 3D world of 2D sprites (like <b>3D Wolfenstein</b>). Use <b>AWSD</b> to move and <b>KL</b> keys to twist camera.",
 			sourcecode: "demos/simple.3dforest.js",
 			thumbnail: "demos/simple.3dforest.png"
 		},
@@ -64,6 +64,8 @@ demos.AttachDemo(
 			var mw = cw >> 1;
 			var mh = ch >> 1;
 
+			ct.clearRect(0, 0, cw, mh);
+
 			// load identity view 3D matrix
 			this.s3dwIdentity();
 
@@ -91,6 +93,7 @@ demos.AttachDemo(
 			this.s3dwTransformPoints('trees');
 
 			// draw scene
+			ct.fillStyle = 'green';
 			ct.fillRect(0, mh, cw, mh);
 			var P = this.pointList['trees'];
 			for(var n = 0; n < this.MAX_TREES; n++) {

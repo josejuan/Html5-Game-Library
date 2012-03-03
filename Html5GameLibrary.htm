@@ -9,11 +9,15 @@
  * JJBM, 09/02/2012, h5gl.sprite.js
  * JJBM, 15/02/2012, some design jobs
  * JJBM, 26/02/2012, use "text/template" and other w3c validations
+ * JJBM, 03/03/2012, first game completed "Sokobullban".
+ * JJBM, 03/03/2012, games section (remove why section).
  *
  *-->
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="keywords" content="html5 games, games online, games programming, javascript games" />
+    <meta name="description" content="HTML5 Game Library. Develop HTML5 games. Source code, effects demonstration and example games." />
     <title>Html 5 Game Libray</title>
     <link rel="stylesheet" href="style.css" />
     <!--
@@ -185,7 +189,7 @@
             <br />
             <ul id="menulinks">
                 <li><a href="#demos_section">demos</a></li>
-                <li><a href="#whythis_section">why?</a></li>
+                <li><a href="#games_section">games</a></li>
                 <li><a href="#compatibility_section">what browsers?</a></li>
                 <li><a href="#thanks_section">thanks to</a></li>
                 <li><a href="#license_section">license <b>GPL3</b></a></li>
@@ -238,15 +242,30 @@
             </ul>
             <hr />
             <br />
-            <h2 id="whythis_section">~/why?/</h2>
-            <p class="sectiontext">Because it's fun!<br />
+            <h2 id="games_section">~/games/</h2>
+            <table id="gamelist">
+                <tr>
+                    <th>Game name</th>
+                    <th>Description</th>
+                    <th>Thumbnail</th>
+                    <th>Play!</th>
+                </tr>
+                <tr>
+                    <td class="name">Soko Bull Ban</td>
+                    <td>Yet another <i>"Sokoban"</i> game. You control a bulldozer to move containers.</td>
+                    <td><img src="img/sokobullban.png" alt="Sokobullban game" /></td>
+                    <td class="play"><a href="games/sokobullban/SokoBullBan.htm">Play!</a></td>
+                </tr>
+            </table>
+            <br />
             </p>
             <hr />
             <br />
             <h2 id="license_section">~/license GPL3/</h2>
             <p class="sectiontext">I made this only for fun (although, if you like give me a gift, I'm not stupid... XD).<br />
             You can use it (if you see utility) always you share your results to community.<br />
-            Yes, the <a href="LICENSE.txt">GPL v3</a> license.
+            Yes, the <b>H5GL</b> library is under <a href="LICENSE.txt">GPL v3</a> license.<br /><br />
+            The games and graphics <b>are not GPL5</b>, all right reserved.
             </p>
             <hr />
             <br />
@@ -269,6 +288,7 @@
             <br />
             <h2 id="coming_soon_section">~/coming soon/</h2>
             <ul class="mylist">
+                <li><b>2012 march 3 »</b>&nbsp;Yes! first complete H5GL game is finished, the <i>"Sokobullban"</i>. What now?...</li>
                 <li><b>2012 february 24 »</b>&nbsp;I would like develop a simple game for show a complete process...</li>
                 <li><b>2012 february 24 »</b>&nbsp;ok, <b>b-spline</b> (with normalized time parameter) are now supported.</li>
                 <li><b>2012 february 15 »</b>&nbsp;I don't know when I will invest time in H5GL. Probably I will add <b>b-spline</b> support... soon.</li>
@@ -284,6 +304,12 @@
         Github repository<br />
         <a href="https://github.com/josejuan/Html5-Game-Library" target="_blank">
             <img src="img/github.png" alt="" />
+        </a>
+    </div>
+    <div id="gamesbox">
+        H5GL Games!<br />
+        <a href="#games_section">
+            <img src="img/h5logo.png" alt="" />
         </a>
     </div>
     <div style="height: 1000px">

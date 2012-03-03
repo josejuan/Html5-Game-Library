@@ -238,9 +238,11 @@ h1, h2, h3, h3, h5
     left: 10px;
     top: 10px;
     z-index: 9998;
+    width: 125px;
     background-color: #a0a0f0;
     border: 1px solid gray;
     color: black;
+    font-size: 12px;
     text-align: center;
     font-weight: bold;
     box-shadow: 4px 4px 8px black;
@@ -262,4 +264,86 @@ h1, h2, h3, h3, h5
     border-radius: 8px;
     box-shadow: 1px 1px 2px gray;
     margin-bottom: 2px;
+}
+
+#gamesbox
+{
+    position: fixed;
+    left: 10px;
+    top: 125px;
+    z-index: 9998;
+    width: 125px;
+    background-color: #a0f0a0;
+    border: 1px solid gray;
+    color: black;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px black;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#gamesbox img
+{
+    box-shadow: 4px 4px 8px black;
+    background-color: white;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 4px;
+}
+
+#gamesbox img:hover
+{
+    border: 1px solid yellow;
+    border-radius: 8px;
+    box-shadow: 1px 1px 2px gray;
+    margin-bottom: 2px;
+}
+
+#gamelist
+{
+    width: 100%;
+    background: url("img/gridbg.gif") repeat-x scroll 0 0 #EFF4FB;
+    border-collapse: collapse;
+    border-left: 1px solid #686868;
+    border-right: 1px solid #686868;
+    color: gray;
+    font-style: italic;
+}
+
+#gamelist th
+{
+    background: url("img/gridhb.gif") repeat-x scroll 0 0 #333333;
+    vertical-align: top;
+    color: white;
+    padding: 5px;
+}
+
+#gamelist td
+{
+    background-color: #e0f0e0;
+    vertical-align: top;
+    padding: 5px;
+    color: black;
+    border-bottom: 1px dotted gray;
+}
+#gamelist .play
+{
+    vertical-align: middle;
+}
+#gamelist .play a
+{
+    color: red;
+    font-weight: bolder;
+}
+#gamelist .play a:hover
+{
+    color: blue;
+}
+#gamelist .name
+{
+    color: black;
+    font-weight: bolder;
 }
